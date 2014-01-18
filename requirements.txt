@@ -1,0 +1,11 @@
+coverage
+flake8
+ipython
+ipdb
+pep257
+pytest
+pytz
+Sphinx
+sphinx_rtd_theme
+
+-e .

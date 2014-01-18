@@ -1,0 +1,14 @@
+syntax: glob
+
+.cache
+dist
+build
+*.egg-info
+*.pyc
+*.pyo
+.coverage
+
+syntax: regexp
+
+^docs/_build/[^.].*
+^docs/_coverage/[^.].*
