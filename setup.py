@@ -42,6 +42,7 @@ setup(
     entry_points={'console_scripts': ['analog=analog:main']},
     classifiers=classifiers,
     install_requires=[
+        'numpy',
         'tabulate',
     ],
     packages=find_packages(),
