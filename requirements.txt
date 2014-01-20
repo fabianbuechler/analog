@@ -7,5 +7,6 @@ pytest
 pytz
 Sphinx
 sphinx_rtd_theme
+tox
 
 -e .

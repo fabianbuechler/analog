@@ -14,8 +14,7 @@ pytest:
 	@echo "$(OK)✓ ran tests and collected coverage$(NC)\n"
 	@coverage report
 	@coverage html --title="analog coverage report" -d docs/_coverage/
-	@open docs/_coverage/index.html
-	@echo "$(OK)✓ created coverage reports in docs/_coverage/. opening...$(NC)\n"
+	@echo "$(OK)✓ created coverage reports in docs/_coverage/$(NC)\n"
 
 flake8:
 	@echo "\n\n$(OK)### flake8 (pyflakes, pep8, mccabe) ###$(NC)\n"
@@ -35,7 +34,6 @@ pep257:
 docs:
 	@echo "\n\n$(OK)### documentation ###$(NC)\n"
 	@cd docs && make clean && make html
-	@open docs/_build/html/index.html
-	@echo "$(OK)✓ built docs. opening...$(NC)\n"
+	@echo "$(OK)✓ built docs.$(NC)\n"
 
 .PHONY: all pytest flake8 pep257 docs
