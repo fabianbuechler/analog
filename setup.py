@@ -2,7 +2,6 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 from setuptools import setup, find_packages
-import sys
 
 
 def read(path, strip=False):
@@ -34,15 +33,16 @@ classifiers = [
 ]
 
 
-PYMAJ = sys.version_info[0]
-PYMIN = sys.version_info[1]
-
 requirements = ['tabulate']
-# mock required for Python <= 3.3 (else unittest.mock)
-if PYMAJ < 3 or (PYMAJ == 3 and PYMIN < 3):
+try:
+    import unittest.mock
+    del unittest.mock
+except ImportError:
     requirements.append('mock')
-# numpy required for Python <= 3.4 (else statistics)
-if PYMAJ < 3 or (PYMAJ == 3 and PYMIN < 4):
+try:
+    import statistics
+    del statistics
+except ImportError:
     requirements.append('numpy')
 
 
