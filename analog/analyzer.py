@@ -5,11 +5,9 @@ import datetime
 import re
 import time
 
+from analog.exceptions import MissingArgumentError
 from analog.formats import LogFormat
 from analog.report import Report
-
-
-__all__ = ('Analyzer', 'analyze')
 
 
 class Analyzer:
@@ -35,9 +33,13 @@ class Analyzer:
         :type paths: ``list`` of ``str``
         :param max_age: Max. age of log entries to analyze in minutes.
         :type max_age: ``int``
+        :raises: ``RuntimeError``
 
         """
         self._log = log
+        if not format:
+            raise MissingArgumentError(
+                "Require log format. Specify format name or regex pattern.")
         formats = LogFormat.all_formats()
         if format in formats:
             self._format = formats[format]

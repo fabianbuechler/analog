@@ -8,10 +8,7 @@ import textwrap
 import analog
 
 
-__all__ = ('main',)
-
-
-def main():
+def main(argv=None):
     """
     analog - Log Analysis Utility.
 
@@ -60,11 +57,11 @@ def main():
     # either -f / --format or -r / --regex for format name or expression
     formatargs = parser.add_mutually_exclusive_group()
     # -f / --format
-    formatargs.add_argument('-f', '--format', action='store', default=None,
+    formatargs.add_argument('-f', '--format', action='store',
                             choices=analog.LogFormat.all_formats(),
                             help="Log format")
     # -r / --regex
-    formatargs.add_argument('-r', '--regex', action='store', default=None,
+    formatargs.add_argument('-r', '--regex', action='store',
                             help='Regex format pattern with named groups.')
     # -a / --max-age
     parser.add_argument('-a', '--max-age', action='store', type=int,
@@ -77,7 +74,9 @@ def main():
                         help="print statistics per path")
 
     try:
-        args = parser.parse_args(sys.argv[1:])
+        if argv is None:
+            argv = sys.argv
+        args = parser.parse_args(argv[1:])
 
         # paths config from args, config file or automatic detection
         if args.paths:
@@ -93,6 +92,7 @@ def main():
                        max_age=args.max_age,
                        print_stats=args.print_stats,
                        print_path_stats=args.print_path_stats)
+        parser.exit(0)
 
     except KeyboardInterrupt:
-        parser.exit(0, "\nExecution cancelled.")
+        parser.exit(1, "\nExecution cancelled.")

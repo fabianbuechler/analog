@@ -6,9 +6,6 @@ import re
 import weakref
 
 
-__all__ = ('LogFormat',)
-
-
 class LogFormat:
 
     """Log format definition.

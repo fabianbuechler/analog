@@ -7,9 +7,6 @@ import textwrap
 import numpy
 
 
-__all__ = ('Report',)
-
-
 class ListStats(object):
 
     """Statistic analysis of a list of values.
