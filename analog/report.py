@@ -77,6 +77,35 @@ class Report:
         self._path_upstream_times = defaultdict(list)
         self._path_body_bytes = defaultdict(list)
 
+    def add(self, path, verb, status, time, upstream_time, body_bytes):
+        """Add a log entry to the report.
+
+        :param path: monitored request path.
+        :type path: ``str``
+        :param verb: HTTP method (GET, POST, ...)
+        :type verb: ``str``
+        :param status: response status code.
+        :type status: ``int``
+        :param time: response time in seconds.
+        :type time: ``float``
+        :param upstream_time:
+        :type upstream_time:
+        :param body_bytes:
+        :type body_bytes:
+
+        """
+        self.requests += 1
+        self._status[status] += 1
+        self._paths[path] += 1
+        self._times.append(time)
+        self._upstream_times.append(upstream_time)
+        self._body_bytes.append(body_bytes)
+        self._path_verbs[path][verb] += 1
+        self._path_status[path][status] += 1
+        self._path_times[path].append(time)
+        self._path_upstream_times[path].append(upstream_time)
+        self._path_body_bytes[path].append(body_bytes)
+
     @property
     def status(self):
         """List status codes of all matched requests, ordered by frequency.

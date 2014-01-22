@@ -121,19 +121,13 @@ class Analyzer:
                 continue
 
             # collect the numbers
-            report.requests += 1
-            report._status[int(log_entry.status)] += 1
-            report._paths[path] += 1
-            report._times.append(float(log_entry.request_time))
-            report._upstream_times.append(
-                float(log_entry.upstream_response_time))
-            report._body_bytes.append(int(log_entry.body_bytes_sent))
-            report._path_verbs[path][log_entry.verb] += 1
-            report._path_status[path][int(log_entry.status)] += 1
-            report._path_times[path].append(float(log_entry.request_time))
-            report._path_upstream_times[path].append(
-                float(log_entry.upstream_response_time))
-            report._path_body_bytes[path].append(int(log_entry.body_bytes_sent))
+            report.add(
+                path=path,
+                verb=log_entry.verb,
+                status=int(log_entry.status),
+                time=float(log_entry.request_time),
+                upstream_time=float(log_entry.upstream_response_time),
+                body_bytes=int(log_entry.body_bytes_sent))
 
         # end timestamp
         finished = time.clock()
