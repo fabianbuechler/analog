@@ -1,12 +1,11 @@
 from __future__ import print_function
 import textwrap
 
+from analog.exceptions import UnknownRendererError
+
 
 class Renderer(object):
     """ Base class for renderers """
-
-    def __init__(self, report):
-        self._report = report
 
     def render_stats(self):
         raise NotImplementedError
@@ -14,15 +13,27 @@ class Renderer(object):
     def render_path_stats(self):
         raise NotImplementedError
 
+    @classmethod
+    def all_renderers(cls):
+        return [subclass.name for subclass in cls.__subclasses__()]
+
+    @classmethod
+    def by_name(cls, name):
+        for subclass in cls.__subclasses__():
+            if subclass.name == name:
+                return subclass()
+        raise UnknownRendererError(name)
+
 
 class PlainTextRenderer(Renderer):
     """ Default renderer """
 
-    def render_stats(self):
+    name = "plain"
+
+    def render(self, report, path_stats=False):
         """Render overall analysis summary report.
 
         """
-        report = self._report
         if report.requests == 0:
             return "Zero requests analyzed."
 
@@ -52,18 +63,18 @@ class PlainTextRenderer(Renderer):
             body_bytes=self._indent(report.body_bytes.stats()))
 
         print(output)
+        if path_stats:
+            self.render_path_stats(report)
 
-    def render_path_stats(self):
+    def render_path_stats(self, report):
         """Render per path analysis summary report.
 
 
         """
-        report = self._report
 
         if report.requests == 0:
             return "Zero requests analyzed."
 
-        path_stats = []
         for path, verbs, status, times, upstream_times, body_bytes in zip(
                 report.path_verbs.keys(),
                 report.path_verbs.values(),
@@ -72,7 +83,7 @@ class PlainTextRenderer(Renderer):
                 report.path_upstream_times.values(),
                 report.path_body_bytes.values()):
 
-            path_stats.append(textwrap.dedent("""\
+            print(textwrap.dedent("""\
                 {path}
 
                     HTTP Verbs:
@@ -96,7 +107,6 @@ class PlainTextRenderer(Renderer):
                 times=self._indent(times.stats(), 8),
                 upstream_times=self._indent(upstream_times.stats(), 8),
                 body_bytes=self._indent(body_bytes.stats(), 8)))
-        print("\n".join(path_stats))
 
     def _str_path_counts(self, path_counts):
         return "\n".join("{count:>10,}   {key}".format(

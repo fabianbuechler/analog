@@ -60,15 +60,15 @@ def main(argv=None):
     formatargs.add_argument('-f', '--format', action='store',
                             choices=analog.LogFormat.all_formats(),
                             help="Log format")
-
-    # -o / --output
-    formatargs.add_argument('-o', '--output', action='store',
-                            dest='output_format',
-                            choices=analog.Renderer.all_renderers(),
-                            help="Output format")
     # -r / --regex
     formatargs.add_argument('-r', '--regex', action='store',
                             help='Regex format pattern with named groups.')
+
+    # -o / --output
+    parser.add_argument('-o', '--output', action='store',
+                        dest='output_format', default='plain',
+                        choices=analog.Renderer.all_renderers(),
+                        help="Output format")
     # -a / --max-age
     parser.add_argument('-a', '--max-age', action='store', type=int,
                         default=analog.Analyzer.MAX_AGE,
@@ -93,9 +93,9 @@ def main(argv=None):
         report = analog.analyze(log=args.log,
                                 format=args.format or args.regex,
                                 paths=paths,
-                                max_age=args.max_age,
-                                path_stats=args.path_stats)
-        report.render(output_format=args.output_format)
+                                max_age=args.max_age)
+        report.render(path_stats=args.path_stats,
+                      output_format=args.output_format)
         parser.exit(0)
 
     except KeyboardInterrupt:

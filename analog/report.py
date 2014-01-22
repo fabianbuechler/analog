@@ -6,6 +6,8 @@ import textwrap
 
 import numpy
 
+from analog.renderers import Renderer
+
 
 class ListStats(object):
 
@@ -225,6 +227,6 @@ class Report:
                     for path, values in self._path_body_bytes.items()),
                    key=lambda item: item[0]))
 
-
-
-
+    def render(self, path_stats, output_format):
+        renderer = Renderer.by_name(output_format)
+        renderer.render(self, path_stats=path_stats)
