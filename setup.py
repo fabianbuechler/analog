@@ -40,12 +40,6 @@ try:
     del unittest.mock
 except ImportError:
     requirements.append('mock')
-# datetime.timezone (3.2+) or pytz
-try:
-    from datetime import timezone
-    del timezone
-except ImportError:
-    requirements.append('pytz')
 # statistics (3.4+) or numpy
 try:
     import statistics

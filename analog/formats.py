@@ -118,4 +118,4 @@ NGINX = LogFormat('nginx', r'''
     (?P<request_time>[\d\.]+)\s             # Request time
     (?P<upstream_response_time>[\d\.]+)\s   # Upstream response time
     (?P<pipe>\S+)?$                         # Pipelined request
-    ''', time_format='%d/%b/%Y:%H:%M:%S %z')
+    ''', time_format='%d/%b/%Y:%H:%M:%S +0000')

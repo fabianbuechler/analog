@@ -4,6 +4,8 @@ Changelog
 0.1.0 - unreleased
 ------------------
 
+* Remove timezone aware datetime handling for the moment.
+
 * Introduce Report.add method to not expose Report externals to Analyzer.
 
 * Install pytz on Python <= 3.2 for UTC object. Else use datetime.timezone.

@@ -5,12 +5,6 @@ import datetime
 import re
 import time
 
-try:
-    from datetime import timezone
-    UTC = timezone.utc
-except ImportError:
-    from pytz import UTC
-
 from analog.exceptions import MissingArgumentError
 from analog.formats import LogFormat
 from analog.report import Report
@@ -53,8 +47,8 @@ class Analyzer:
             self._format = LogFormat('custom', re.escape(format))
         self._pathconf = paths
 
-        self._now = datetime.datetime.utcnow()
-        self._now = self._now.replace(second=0, microsecond=0, tzinfo=UTC)
+        self._now = datetime.datetime.now()
+        self._now = self._now.replace(second=0, microsecond=0)
         self._min_time = self._now - datetime.timedelta(minutes=max_age)
 
     def _monitor_path(self, path):
