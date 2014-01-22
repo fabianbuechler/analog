@@ -88,10 +88,10 @@ class Report:
         :type status: ``int``
         :param time: response time in seconds.
         :type time: ``float``
-        :param upstream_time:
-        :type upstream_time:
-        :param body_bytes:
-        :type body_bytes:
+        :param upstream_time: upstream response time in seconds.
+        :type upstream_time: ``float``
+        :param body_bytes: response body size in bytes.
+        :type body_bytes: ``float``
 
         """
         self.requests += 1
