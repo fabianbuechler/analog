@@ -28,7 +28,7 @@ class LogFormat:
     """
 
     # format pool
-    __formats__ = {}
+    __formats_ = {}
 
     # required pattern groups
     _required_attributes = ('timestamp', 'verb', 'path', 'status',
@@ -54,7 +54,7 @@ class LogFormat:
         :raises: ``RuntimeError`` if missing required format pattern groups.
 
         """
-        self.__formats__[name] = weakref.ref(self)
+        self.__formats_[name] = weakref.ref(self)
         self.name = name
         self.pattern = re.compile(pattern, re.UNICODE | re.VERBOSE)
         attributes = self.pattern.groupindex.keys()
@@ -88,7 +88,7 @@ class LogFormat:
 
         """
         formats = {}
-        for name, ref in cls.__formats__.items():
+        for name, ref in cls.__formats_.items():
             instance = ref()
             if instance is not None:
                 formats[name] = instance
