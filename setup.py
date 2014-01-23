@@ -55,7 +55,7 @@ setup(
     version=read('VERSION'),
     url='https://bitbucket.org/fabianbuechler/analog',
     license='MIT license',
-    author='Fabian Büchler',
+    author='Fabian B\xfcchler',
     author_email='fabian.buechler@gmail.com',
     entry_points={'console_scripts': ['analog=analog:main']},
     classifiers=classifiers,
