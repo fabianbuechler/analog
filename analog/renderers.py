@@ -8,6 +8,7 @@ from analog.exceptions import UnknownRendererError
 
 
 class Renderer(object):
+
     """Base report renderer interface."""
 
     @abc.abstractmethod
@@ -50,12 +51,17 @@ class Renderer(object):
 
 
 class PlainTextRenderer(Renderer):
-    """ Default renderer """
+
+    """ Default renderer. """
 
     name = "plain"
 
     def render(self, report, path_stats=False):
-        """Render overall analysis summary report.
+        """
+        Render overall analysis summary report.
+
+        :returns: output string
+        :rtype: `str`
 
         """
         if report.requests == 0:
@@ -94,11 +100,13 @@ class PlainTextRenderer(Renderer):
         return output
 
     def _render_path_stats(self, report):
-        """Render per path analysis summary report.
+        """
+        Render per path analysis summary report.
 
+        :returns: output string
+        :rtype: `str`
 
         """
-
         if report.requests == 0:
             return "Zero requests analyzed."
 
@@ -141,7 +149,8 @@ class PlainTextRenderer(Renderer):
         return "\n".join(output)
 
     def _render_list_stats(self, list_stats):
-        """Generate pretty representation of list statistics object.
+        """
+        Generate pretty representation of list statistics object.
 
         :param list_stats: ``ListStats`` instance.
         :returns: statistic report.
@@ -157,10 +166,30 @@ class PlainTextRenderer(Renderer):
             """).format(stats=list_stats)
 
     def _str_path_counts(self, path_counts):
+        """
+        Render path count.
+
+        :returns: output string
+        :rtype: `str`
+
+        """
         return "\n".join("{count:>10,}   {key}".format(
             key=key, count=count) for key, count in path_counts)
 
     def _indent(self, text, indent=4):
+        """
+        Render every line after the first line indented.
+
+        Example::
+
+            line1
+                line2
+                line3
+
+        :returns: output string
+        :rtype: `str`
+
+        """
         lines = []
         for idx, line in enumerate(text.splitlines()):
             space = " " * indent if idx > 0 else ""
