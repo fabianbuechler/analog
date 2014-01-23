@@ -8,16 +8,18 @@ from analog.exceptions import UnknownRendererError
 
 
 class Renderer(object):
-
     """Base report renderer interface."""
 
     @abc.abstractmethod
-    def render_stats(self):
+    def render(self):
         """Render overall report statistics."""
 
     @abc.abstractmethod
-    def render_path_stats(self):
+    def _render_path_stats(self):
         """Render per path report statistics."""
+
+    def _render_list_stats(self, elements):
+        """Render list statistics."""
 
     @classmethod
     def all_renderers(cls):
@@ -80,15 +82,18 @@ class PlainTextRenderer(Renderer):
             self=report,
             status=self._indent(self._str_path_counts(report.status)),
             paths=self._indent(self._str_path_counts(report.paths)),
-            times=self._indent(report.times.stats()),
-            upstream_times=self._indent(report.upstream_times.stats()),
-            body_bytes=self._indent(report.body_bytes.stats()))
+            times=self._indent(self._render_list_stats(report.times)),
+            upstream_times=self._indent(
+                self._render_list_stats(report.upstream_times)),
+            body_bytes=self._indent(
+                self._render_list_stats(report.body_bytes)))
 
-        print(output)
         if path_stats:
-            self.render_path_stats(report)
+            output += "\n" + self._render_path_stats(report)
 
-    def render_path_stats(self, report):
+        return output
+
+    def _render_path_stats(self, report):
         """Render per path analysis summary report.
 
 
@@ -97,6 +102,7 @@ class PlainTextRenderer(Renderer):
         if report.requests == 0:
             return "Zero requests analyzed."
 
+        output = []
         for path, verbs, status, times, upstream_times, body_bytes in zip(
                 report.path_verbs.keys(),
                 report.path_verbs.values(),
@@ -105,7 +111,7 @@ class PlainTextRenderer(Renderer):
                 report.path_upstream_times.values(),
                 report.path_body_bytes.values()):
 
-            print(textwrap.dedent("""\
+            output.append(textwrap.dedent("""\
                 {path}
 
                     HTTP Verbs:
@@ -126,9 +132,29 @@ class PlainTextRenderer(Renderer):
                 path=path,
                 verbs=self._indent(self._str_path_counts(verbs), 8),
                 status=self._indent(self._str_path_counts(status), 8),
-                times=self._indent(times.stats(), 8),
-                upstream_times=self._indent(upstream_times.stats(), 8),
-                body_bytes=self._indent(body_bytes.stats(), 8)))
+                times=self._indent(self._render_list_stats(times), 8),
+                upstream_times=self._indent(
+                    self._render_list_stats(upstream_times), 8),
+                body_bytes=self._indent(
+                    self._render_list_stats(body_bytes), 8)))
+
+        return "\n".join(output)
+
+    def _render_list_stats(self, list_stats):
+        """Generate pretty representation of list statistics object.
+
+        :param list_stats: ``ListStats`` instance.
+        :returns: statistic report.
+        :rtype: ``str``
+
+        """
+        return textwrap.dedent("""\
+            {stats.mean:>10.5}   mean
+            {stats.median:>10.5}   median
+            {stats.perc90:>10.5}   90th percentile
+            {stats.perc75:>10.5}   75th percentile
+            {stats.perc25:>10.5}   25th percentile
+            """).format(stats=list_stats)
 
     def _str_path_counts(self, path_counts):
         return "\n".join("{count:>10,}   {key}".format(

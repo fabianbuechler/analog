@@ -30,21 +30,6 @@ class ListStats(object):
         self.perc75 = numpy.percentile(elements, 75) if elements else None
         self.perc25 = numpy.percentile(elements, 25) if elements else None
 
-    def stats(self):
-        """Generate pretty representation of list statistics object.
-
-        :returns: statistic report.
-        :rtype: ``str``
-
-        """
-        return textwrap.dedent("""\
-            {self.mean:>10.5}   mean
-            {self.median:>10.5}   median
-            {self.perc90:>10.5}   90th percentile
-            {self.perc75:>10.5}   75th percentile
-            {self.perc25:>10.5}   25th percentile
-            """).format(self=self)
-
 
 class Report:
 
