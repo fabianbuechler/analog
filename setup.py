@@ -46,6 +46,12 @@ try:
     del statistics
 except ImportError:
     requirements.append('numpy')
+# configparser available? (3+)
+try:
+    import configparser
+    del configparser
+except ImportError:
+    requirements.append('configparser')
 
 
 setup(

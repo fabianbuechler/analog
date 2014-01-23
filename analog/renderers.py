@@ -3,7 +3,10 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 import abc
 import csv
-from cStringIO import StringIO
+try:
+    from cStringIO import StringIO
+except ImportError:
+    from io import StringIO
 import textwrap
 
 from tabulate import tabulate

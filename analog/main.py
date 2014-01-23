@@ -1,7 +1,7 @@
 """Analog console entry point."""
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-from ConfigParser import ConfigParser
+import configparser
 import argparse
 import sys
 import textwrap
@@ -10,21 +10,27 @@ import re
 import analog
 
 
-class ListConfigParser(ConfigParser):
+class ConfigParser(configparser.ConfigParser):
 
     """ Extension of ConfigParser able to parse lists. """
 
     def getlist(self, section, key, fallback=None):
-        """ Get a list from the config with an optional fallback.
+        """Get a list from the config with an optional fallback.
 
+        :param section: section name
+        :type section: ``str``
+        :param key: key name
+        :type key: ``str``
+        :param fallback: fallback value if section or key don't exist
+        :type fallback: ``list``
         :returns: list from config
-        :rtype: `list`
+        :rtype: ``list``
 
         """
         try:
-            items = re.split(',|\n', self.get(section, key))
-            return [item for item in items if item]
-        except:
+            items = re.split(r',|\n', self.get(section, key))
+            return list(filter(None, map(str.strip, items)))
+        except configparser.Error:
             return fallback
 
 
@@ -58,7 +64,7 @@ def main(argv=None):
         formatter_class=argparse.RawDescriptionHelpFormatter)
 
     # -c / --config
-    parser.add_argument('-c', '--conf', action='store',
+    parser.add_argument('-c', '--config', action='store', default='analog.ini',
                         type=argparse.FileType('r'),
                         help="config file")
     # -v / --version
@@ -100,26 +106,31 @@ def main(argv=None):
             argv = sys.argv
         args = parser.parse_args(argv[1:])
 
-        config = ListConfigParser()
+        # read configuration from ini file (default analog.ini)
+        config = ConfigParser()
         if args.conf:
             config.readfp(args.conf)
-
-        verbs = config.getlist('analog', 'verbs', fallback=[
-                               'DELETE', 'GET', 'PATCH', 'POST', 'PUT'])
-        status_codes = config.getlist('analog', 'status_codes',
-                                      fallback=[1, 2, 3, 4, 5])
+        # verbs, status codes and paths to monitor
+        verbs = config.getlist(
+            'analog', 'verbs', fallback=[
+                'DELETE', 'GET', 'PATCH', 'POST', 'PUT'])
+        status_codes = config.getlist(
+            'analog', 'status_codes', fallback=[1, 2, 3, 4, 5])
         paths = config.getlist('analog', 'paths', fallback=[])
 
+        # analyze logfile and generate report
         report = analog.analyze(log=args.log,
                                 format=args.format or args.regex,
                                 paths=paths,
                                 verbs=verbs,
                                 status_codes=status_codes,
                                 max_age=args.max_age)
+        # print timing information
         if args.timing:
             print("Analyzed logs in {elapsed:.3f}s.\n".format(
                 elapsed=report.execution_time))
 
+        # print report in requested output format
         print(report.render(path_stats=args.path_stats,
                             output_format=args.output_format))
         parser.exit(0)
