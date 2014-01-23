@@ -70,6 +70,9 @@ class PlainTextRenderer(Renderer):
         output = textwrap.dedent("""\
             Requests: {self.requests}
 
+            HTTP Verbs:
+                {verbs}
+
             Status Codes:
                 {status}
 
@@ -86,6 +89,7 @@ class PlainTextRenderer(Renderer):
                 {body_bytes}
             """).format(
             self=report,
+            verbs=self._indent(self._str_path_counts(report.verbs)),
             status=self._indent(self._str_path_counts(report.status)),
             paths=self._indent(self._str_path_counts(report.paths)),
             times=self._indent(self._render_list_stats(report.times)),

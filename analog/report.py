@@ -37,6 +37,7 @@ class Report:
     Provides these statistical metrics:
 
     * Number for requests.
+    * Response request method (HTTP verb) distribution.
     * Response status code distribution.
     * Request path distribution.
     * Response time statistics (mean, median, 90th, 75th and 25th percentiles).
@@ -53,6 +54,7 @@ class Report:
     def __init__(self):
         self.execution_time = None
         self.requests = 0
+        self._verbs = Counter()
         self._status = Counter()
         self._paths = Counter()
         self._times = []
@@ -82,6 +84,7 @@ class Report:
 
         """
         self.requests += 1
+        self._verbs[verb] += 1
         self._status[status] += 1
         self._paths[path] += 1
         self._times.append(time)
@@ -92,6 +95,16 @@ class Report:
         self._path_times[path].append(time)
         self._path_upstream_times[path].append(upstream_time)
         self._path_body_bytes[path].append(body_bytes)
+
+    @property
+    def verbs(self):
+        """List request methods of all matched requests, ordered by frequency.
+
+        :returns: tuples of HTTP verb and occurrency count.
+        :rtype: ``list`` of ``tuple``
+
+        """
+        return self._verbs.most_common()
 
     @property
     def status(self):

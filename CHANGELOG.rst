@@ -4,6 +4,8 @@ Changelog
 0.1.0 - unreleased
 ------------------
 
+* Also analyze HTTP verbs distribution for overall report.
+
 * Remove timezone aware datetime handling for the moment.
 
 * Introduce Report.add method to not expose Report externals to Analyzer.
