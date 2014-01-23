@@ -30,7 +30,24 @@ class ListStats(object):
         self.perc25 = numpy.percentile(elements, 25) if elements else None
 
 
-class Report:
+class PrefixMatchingCounter(Counter):
+
+    """
+    Counter-like object that increments a field if it has a common prefix.
+
+    Example:
+        "400", "401", "404" all increment a field named "4"
+
+    """
+
+    def inc(self, field):
+        """Increment every field that starts with field by one."""
+        for prefix in self.keys():
+            if str(field).startswith(str(prefix)):
+                self[prefix] += 1
+
+
+class Report(object):
 
     """Log analysis report object.
 
@@ -51,11 +68,12 @@ class Report:
 
     """
 
-    def __init__(self):
+    def __init__(self, verbs, status_codes):
         self.execution_time = None
         self.requests = 0
-        self._verbs = Counter()
-        self._status = Counter()
+        self._verbs = Counter({verb: 0 for verb in verbs})
+        self._status = PrefixMatchingCounter(
+            {code: 0 for code in status_codes})
         self._paths = Counter()
         self._times = []
         self._upstream_times = []
@@ -84,8 +102,9 @@ class Report:
 
         """
         self.requests += 1
-        self._verbs[verb] += 1
-        self._status[status] += 1
+        if verb in self._verbs:  # Only keep verbs that are being tracked
+            self._verbs[verb] += 1
+        self._status.inc(status)
         self._paths[path] += 1
         self._times.append(time)
         self._upstream_times.append(upstream_time)

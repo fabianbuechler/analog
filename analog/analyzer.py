@@ -21,13 +21,19 @@ class Analyzer:
 
     MAX_AGE = 10
 
-    def __init__(self, log, format, paths=[], max_age=MAX_AGE):
+    def __init__(self, log, format, verbs, status_codes,
+                 paths=[], max_age=MAX_AGE, path_stats=False):
         """Configure log analyzer.
 
         :param log: handle on logfile to read and analyze.
         :type log: :py:class:`io.TextIOWrapper`
         :param format: log format identifier or regex pattern.
         :type format: ``str``
+        :param verbs: HTTP verbs to be tracked.
+        :type verbs: ``list``
+        :param status_codes: status_codes to be tracked. May be prefixes,
+            e.g. ["100", "2", "3", "4", "404" ]
+        :type status_codes: ``list``
         :param paths: Paths to explicitly analyze. If not defined, paths are
             detected automatically.
         :type paths: ``list`` of ``str``
@@ -46,6 +52,8 @@ class Analyzer:
             self._format = formats[format]
         else:
             self._format = LogFormat('custom', re.escape(format))
+        self._verbs = verbs
+        self._status_codes = status_codes
         self._pathconf = paths
 
         self._max_age = max_age
@@ -97,7 +105,7 @@ class Analyzer:
         # start timestamp
         started = time.clock()
 
-        report = Report()
+        report = Report(self._verbs, self._status_codes)
 
         # read lines from logfile for the last max_age minutes
         for line in self._log:
@@ -136,8 +144,8 @@ class Analyzer:
         return report
 
 
-def analyze(log, format, paths=[], max_age=Analyzer.MAX_AGE,
-            path_stats=False):
+def analyze(log, format, verbs, status_codes,
+            paths=[], max_age=Analyzer.MAX_AGE, path_stats=False):
     """Convenience wrapper around :py:class:`analog.analyzer.Analyzer`.
 
     :param log: handle on logfile to read and analyze.
@@ -155,5 +163,5 @@ def analyze(log, format, paths=[], max_age=Analyzer.MAX_AGE,
     :rtype: :py:class:`analog.report.Report`
 
     """
-    analyzer = Analyzer(log=log, format=format, paths=paths, max_age=max_age)
+    analyzer = Analyzer(**locals())
     return analyzer()

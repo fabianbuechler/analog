@@ -1,6 +1,7 @@
 """Analog console entry point."""
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
+from iniconfig import ConfigParser
 import argparse
 import sys
 import textwrap
@@ -37,15 +38,10 @@ def main(argv=None):
         description=textwrap.dedent(main.__doc__.replace('``', "'")),
         formatter_class=argparse.RawDescriptionHelpFormatter)
 
-    # either -p / --path (multiple times) or -c / --config path-config file
-    pathargs = parser.add_mutually_exclusive_group()
-    # -p / --path
-    pathargs.add_argument('-p', '--path', action='append', dest='paths',
-                          help="paths to monitor")
     # -c / --config
-    pathargs.add_argument('-c', '--pathconf', action='store',
-                          type=argparse.FileType('r'),
-                          help="path config file")
+    parser.add_argument('-c', '--conf', action='store',
+                        type=argparse.FileType('r'),
+                        help="config file")
     # -v / --version
     parser.add_argument('--version', action='version',
                         version="analog {v}".format(v=analog.__version__))
@@ -85,17 +81,21 @@ def main(argv=None):
             argv = sys.argv
         args = parser.parse_args(argv[1:])
 
-        # paths config from args, config file or automatic detection
-        if args.paths:
-            paths = args.paths
-        elif args.pathconf:
-            paths = args.pathconf.read().splitlines()
-        else:
-            paths = []
+        config = ConfigParser()
+        if args.conf:
+            config.readfp(args.conf)
+
+        verbs = config.getlist('analog', 'verbs', fallback=[
+                               'delete', 'get', 'patch', 'post', 'put'])
+        status_codes = config.getlist('analog', 'status_codes',
+                                      fallback=[1, 2, 3, 4, 5])
+        paths = config.getlist('analog', 'paths', fallback=[])
 
         report = analog.analyze(log=args.log,
                                 format=args.format or args.regex,
                                 paths=paths,
+                                verbs=verbs,
+                                status_codes=status_codes,
                                 max_age=args.max_age)
         if args.timing:
             print("Analyzed logs in {elapsed:.3f}s.\n".format(

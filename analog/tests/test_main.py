@@ -51,7 +51,7 @@ def test_format_or_regex_required(capsys, tmp_logfile):
         assert exit.errisinstance(analog.MissingFormatError)
 
 
-@mock.patch('analog.analyze', return_value=analog.Report())
+@mock.patch('analog.analyze', return_value=analog.Report([], []))
 def test_paths(mock_analyze, capsys, tmp_logfile):
     """analog --path specifies paths to monitor."""
     with pytest.raises(SystemExit):

@@ -380,7 +380,7 @@ class SeparatedValuesRenderer(TabularDataRenderer):
         writer.writerow(headers)
         writer.writerows(rows)
 
-        return stream.getvalue()
+        return stream.getvalue()[:-1]  # Do not return last newline
 
 
 class CSVRenderer(SeparatedValuesRenderer):
