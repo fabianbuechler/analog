@@ -6,6 +6,7 @@ from collections import Counter, defaultdict, OrderedDict
 import numpy
 
 from analog.renderers import Renderer
+from analog.utils import PrefixMatchingCounter
 
 
 class ListStats(object):
@@ -30,23 +31,6 @@ class ListStats(object):
         self.perc25 = numpy.percentile(elements, 25) if elements else None
 
 
-class PrefixMatchingCounter(Counter):
-
-    """
-    Counter-like object that increments a field if it has a common prefix.
-
-    Example:
-        "400", "401", "404" all increment a field named "4"
-
-    """
-
-    def inc(self, field):
-        """Increment every field that starts with field by one."""
-        for prefix in self.keys():
-            if str(field).startswith(str(prefix)):
-                self[prefix] += 1
-
-
 class Report(object):
 
     """Log analysis report object.
@@ -69,17 +53,21 @@ class Report(object):
     """
 
     def __init__(self, verbs, status_codes):
+
+        def status_counter():
+            return PrefixMatchingCounter(
+                {str(code): 0 for code in status_codes})
+
         self.execution_time = None
         self.requests = 0
         self._verbs = Counter({verb: 0 for verb in verbs})
-        self._status = PrefixMatchingCounter(
-            {code: 0 for code in status_codes})
+        self._status = status_counter()
         self._paths = Counter()
         self._times = []
         self._upstream_times = []
         self._body_bytes = []
         self._path_verbs = defaultdict(Counter)
-        self._path_status = defaultdict(Counter)
+        self._path_status = defaultdict(status_counter)
         self._path_times = defaultdict(list)
         self._path_upstream_times = defaultdict(list)
         self._path_body_bytes = defaultdict(list)
@@ -104,13 +92,13 @@ class Report(object):
         self.requests += 1
         if verb in self._verbs:  # Only keep verbs that are being tracked
             self._verbs[verb] += 1
-        self._status.inc(status)
+        self._status.inc(str(status))
         self._paths[path] += 1
         self._times.append(time)
         self._upstream_times.append(upstream_time)
         self._body_bytes.append(body_bytes)
         self._path_verbs[path][verb] += 1
-        self._path_status[path][status] += 1
+        self._path_status[path].inc(status)
         self._path_times[path].append(time)
         self._path_upstream_times[path].append(upstream_time)
         self._path_body_bytes[path].append(body_bytes)

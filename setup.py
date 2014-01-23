@@ -33,7 +33,7 @@ classifiers = [
 ]
 
 
-requirements = ['iniconfig', 'tabulate']
+requirements = ['tabulate']
 # unittest.mock (3.3+) or mock
 try:
     import unittest.mock

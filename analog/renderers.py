@@ -3,12 +3,13 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 import abc
 import csv
-import io
+from cStringIO import StringIO
 import textwrap
 
 from tabulate import tabulate
 
 from analog.exceptions import UnknownRendererError
+from analog.utils import PrefixMatchingCounter
 
 
 def find_subclasses(cls, _seen=None):
@@ -272,7 +273,8 @@ class TabularDataRenderer(Renderer):
             (verb, count) for (verb, count) in report.verbs))
         # sorted list of all status codes in this report and their counts
         status_names, status_counts = zip(*sorted(
-            (str(status), count) for (status, count) in report.status))
+            (str(status), count)
+            for (status, count) in report.status))
         # all statistical attributes of the report
         stats = [(stats_field, self._list_stats(getattr(report, stats_field)))
                  for stats_field in self._stats_fields]
@@ -281,7 +283,11 @@ class TabularDataRenderer(Renderer):
             for (field, list_stats) in stats
             for (analysis, value) in list_stats))
 
-        headers = ("path", "requests") + verb_names + status_names + stats_names
+        status_headers = tuple("status_{code:x<3}".format(code=code)
+                               for code in status_names)
+
+        headers = (("path", "requests") + verb_names + status_headers
+                   + stats_names)
         total = (("total", report.requests) +
                  verb_counts + status_counts + stats_values)
 
@@ -298,7 +304,7 @@ class TabularDataRenderer(Renderer):
                     report.path_body_bytes.values()):
                 requests = report._paths[path]
                 verbs = dict(verbs)
-                status = dict(status)
+                status = PrefixMatchingCounter(dict(status))
                 row = [path, requests]
                 row += [verbs.get(name, 0) for name in verb_names]
                 row += [status.get(name, 0) for name in status_names]
@@ -375,8 +381,8 @@ class SeparatedValuesRenderer(TabularDataRenderer):
         """
         headers, rows = self._tabular_data(report, path_stats)
 
-        stream = io.StringIO()
-        writer = csv.writer(stream, delimiter=self.delimiter)
+        stream = StringIO()
+        writer = csv.writer(stream, delimiter=str(self.delimiter))
         writer.writerow(headers)
         writer.writerows(rows)
 

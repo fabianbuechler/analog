@@ -1,12 +1,31 @@
 """Analog console entry point."""
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-from iniconfig import ConfigParser
+from ConfigParser import ConfigParser
 import argparse
 import sys
 import textwrap
+import re
 
 import analog
+
+
+class ListConfigParser(ConfigParser):
+
+    """ Extension of ConfigParser able to parse lists. """
+
+    def getlist(self, section, key, fallback=None):
+        """ Get a list from the config with an optional fallback.
+
+        :returns: list from config
+        :rtype: `list`
+
+        """
+        try:
+            items = re.split(',|\n', self.get(section, key))
+            return [item for item in items if item]
+        except:
+            return fallback
 
 
 def main(argv=None):
@@ -81,12 +100,12 @@ def main(argv=None):
             argv = sys.argv
         args = parser.parse_args(argv[1:])
 
-        config = ConfigParser()
+        config = ListConfigParser()
         if args.conf:
             config.readfp(args.conf)
 
         verbs = config.getlist('analog', 'verbs', fallback=[
-                               'delete', 'get', 'patch', 'post', 'put'])
+                               'DELETE', 'GET', 'PATCH', 'POST', 'PUT'])
         status_codes = config.getlist('analog', 'status_codes',
                                       fallback=[1, 2, 3, 4, 5])
         paths = config.getlist('analog', 'paths', fallback=[])
