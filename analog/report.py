@@ -67,6 +67,7 @@ class Report:
     """
 
     def __init__(self):
+        self.execution_time = None
         self.requests = 0
         self._status = Counter()
         self._paths = Counter()
@@ -228,5 +229,17 @@ class Report:
                    key=lambda item: item[0]))
 
     def render(self, path_stats, output_format):
-        renderer = Renderer.by_name(output_format)
-        renderer.render(self, path_stats=path_stats)
+        """Render report data into ``output_format``.
+
+        :param path_stats: include per path statistics in output.
+        :type path_stats: ``bool``
+        :param output_format: name of report renderer.
+        :type output_format: ``str``
+        :raises: :py:class:`analog.exceptions.UnknownRendererError` or unknown
+            ``output_format`` identifiers.
+        :returns: rendered report data.
+        :rtype: ``str``
+
+        """
+        renderer = Renderer.by_name(name=output_format)
+        return renderer.render(self, path_stats=path_stats)

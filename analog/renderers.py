@@ -1,24 +1,46 @@
-from __future__ import print_function
+"""Analog log report renderers."""
+from __future__ import (absolute_import, division, print_function,
+                        unicode_literals)
+import abc
 import textwrap
 
 from analog.exceptions import UnknownRendererError
 
 
 class Renderer(object):
-    """ Base class for renderers """
 
+    """Base report renderer interface."""
+
+    @abc.abstractmethod
     def render_stats(self):
-        raise NotImplementedError
+        """Render overall report statistics."""
 
+    @abc.abstractmethod
     def render_path_stats(self):
-        raise NotImplementedError
+        """Render per path report statistics."""
 
     @classmethod
     def all_renderers(cls):
+        """Get a list fo all defined report renderer names.
+
+        :returns: names of all renderers.
+        :rtype: ``list``
+
+        """
         return [subclass.name for subclass in cls.__subclasses__()]
 
     @classmethod
     def by_name(cls, name):
+        """Select specific ``Renderer`` subclass by name.
+
+        :param name: name of subclass.
+        :type name: ``str``
+        :returns: ``Renderer`` subclass instance.
+        :rtype: :py:class:`analog.renderers.Renderer`
+        :raises: :py:class:`analog.exceptions.UnknownRendererError` for unknown
+            subclass names.
+
+        """
         for subclass in cls.__subclasses__():
             if subclass.name == name:
                 return subclass()

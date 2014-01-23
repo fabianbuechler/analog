@@ -76,6 +76,9 @@ def main(argv=None):
     # -s / --stats
     parser.add_argument('-ps', '--path-stats', action='store_true',
                         help="include statistics per path")
+    # -t / --timing
+    parser.add_argument('-t', '--timing', action='store_true',
+                        help="print timing")
 
     try:
         if argv is None:
@@ -94,9 +97,16 @@ def main(argv=None):
                                 format=args.format or args.regex,
                                 paths=paths,
                                 max_age=args.max_age)
-        report.render(path_stats=args.path_stats,
-                      output_format=args.output_format)
+        if args.timing:
+            print("Analyzed logs in {elapsed:.3f}s.\n".format(
+                elapsed=report.execution_time))
+
+        print(report.render(path_stats=args.path_stats,
+                            output_format=args.output_format))
         parser.exit(0)
+
+    except analog.AnalogError as exc:
+        parser.error(str(exc))
 
     except KeyboardInterrupt:
         parser.exit(1, "\nExecution cancelled.")

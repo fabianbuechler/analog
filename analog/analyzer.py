@@ -5,10 +5,9 @@ import datetime
 import re
 import time
 
-from analog.exceptions import MissingArgumentError
+from analog.exceptions import MissingFormatError
 from analog.formats import LogFormat
 from analog.report import Report
-from analog.renderers import PlainTextRenderer
 
 
 class Analyzer:
@@ -34,12 +33,13 @@ class Analyzer:
         :type paths: ``list`` of ``str``
         :param max_age: Max. age of log entries to analyze in minutes.
         :type max_age: ``int``
-        :raises: ``RuntimeError``
+        :raises: :py:class:`analog.exceptions.MissingFormatError` if no
+            ``format`` is specified.
 
         """
         self._log = log
         if not format:
-            raise MissingArgumentError(
+            raise MissingFormatError(
                 "Require log format. Specify format name or regex pattern.")
         formats = LogFormat.all_formats()
         if format in formats:
@@ -48,9 +48,10 @@ class Analyzer:
             self._format = LogFormat('custom', re.escape(format))
         self._pathconf = paths
 
-        self._now = datetime.datetime.now()
-        self._now = self._now.replace(second=0, microsecond=0)
-        self._min_time = self._now - datetime.timedelta(minutes=max_age)
+        self._max_age = max_age
+
+        # execution time
+        self.execution_time = None
 
     def _monitor_path(self, path):
         """Convert full request path to monitored path.
@@ -89,6 +90,10 @@ class Analyzer:
         :rtype: :py:class:`analog.report.Report`
 
         """
+        self._now = datetime.datetime.now()
+        self._now = self._now.replace(second=0, microsecond=0)
+        self._min_time = self._now - datetime.timedelta(minutes=self._max_age)
+
         # start timestamp
         started = time.clock()
 
@@ -126,8 +131,7 @@ class Analyzer:
 
         # end timestamp
         finished = time.clock()
-        print("Analyzed logs in {elapsed:.3f}s.\n".format(
-            elapsed=finished - started))
+        report.execution_time = finished - started
 
         return report
 
@@ -152,7 +156,4 @@ def analyze(log, format, paths=[], max_age=Analyzer.MAX_AGE,
 
     """
     analyzer = Analyzer(log=log, format=format, paths=paths, max_age=max_age)
-    report = analyzer()
-
-    return report
-
+    return analyzer()

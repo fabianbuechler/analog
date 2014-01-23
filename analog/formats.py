@@ -5,6 +5,8 @@ from collections import namedtuple
 import re
 import weakref
 
+from analog.exceptions import InvalidFormatExpressionError
+
 
 class LogFormat:
 
@@ -51,16 +53,21 @@ class LogFormat:
         :type pattern: raw ``str``
         :param time_format: timestamp parsing pattern.
         :type time_format: ``str``
-        :raises: ``RuntimeError`` if missing required format pattern groups.
+        :raises: :py:class:`analog.exceptions.InvalidFormatExpressionError` if
+            missing required format pattern groups or the pattern is not a valid
+            regular expression.
 
         """
         self.__formats_[name] = weakref.ref(self)
         self.name = name
-        self.pattern = re.compile(pattern, re.UNICODE | re.VERBOSE)
+        try:
+            self.pattern = re.compile(pattern, re.UNICODE | re.VERBOSE)
+        except re.error:
+            raise InvalidFormatExpressionError("Invalid regex in format.")
         attributes = self.pattern.groupindex.keys()
         for attr in self._required_attributes:
             if attr not in attributes:
-                raise RuntimeError(
+                raise InvalidFormatExpressionError(
                     "Format pattern must at least define the groups: "
                     "{0}.".format(", ".join(self._required_attributes)))
         self.time_format = time_format
