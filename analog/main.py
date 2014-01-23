@@ -67,7 +67,7 @@ def main(argv=None):
     # -o / --output
     parser.add_argument('-o', '--output', action='store',
                         dest='output_format', default='plain',
-                        choices=analog.Renderer.all_renderers(),
+                        choices=analog.Renderer.all_renderers().keys(),
                         help="Output format")
     # -a / --max-age
     parser.add_argument('-a', '--max-age', action='store', type=int,

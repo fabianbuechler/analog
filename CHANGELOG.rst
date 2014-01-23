@@ -4,6 +4,8 @@ Changelog
 0.1.0 - unreleased
 ------------------
 
+* Add renderer for tabular output. Use --output [grid|table].
+
 * Also analyze HTTP verbs distribution for overall report.
 
 * Remove timezone aware datetime handling for the moment.
