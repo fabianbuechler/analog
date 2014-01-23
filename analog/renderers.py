@@ -2,35 +2,65 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 import abc
+import csv
+import io
 import textwrap
 
+from tabulate import tabulate
+
 from analog.exceptions import UnknownRendererError
+
+
+def find_subclasses(cls, _seen=None):
+    """Find all subclasses (recursively) of ``cls``.
+
+    :param cls: class object.
+    :param _seen: set of already found classes if called recursively.
+    :returns: generator of ``cls`` subclasses.
+    :rtype: ``generator``
+
+    """
+    if _seen is None:
+            _seen = set()
+    for subclass in cls.__subclasses__():
+        if subclass not in _seen:
+            _seen.add(subclass)
+            yield subclass
+            for subclass in find_subclasses(subclass, _seen):
+                yield subclass
 
 
 class Renderer(object):
 
     """Base report renderer interface."""
 
-    @abc.abstractmethod
-    def render(self):
-        """Render overall report statistics."""
+    __metaclass__ = abc.ABCMeta
+
+    name = None
 
     @abc.abstractmethod
-    def _render_path_stats(self):
-        """Render per path report statistics."""
+    def render(self, report, path_stats=False):
+        """Render report statistics.
 
-    def _render_list_stats(self, elements):
-        """Render list statistics."""
+        :param report: log analysis report object.
+        :type report: :py:class:`analog.report.Report`
+        :param path_stats: include per path statistics in output.
+        :type path_stats: ``bool``
+        :returns: output string
+        :rtype: `str`
+
+        """
 
     @classmethod
     def all_renderers(cls):
-        """Get a list fo all defined report renderer names.
+        """Get a mapping of all defined report renderer names.
 
-        :returns: names of all renderers.
-        :rtype: ``list``
+        :returns: dictionary of name to renderer class.
+        :rtype: ``dict``
 
         """
-        return [subclass.name for subclass in cls.__subclasses__()]
+        return {subclass.name: subclass for subclass in find_subclasses(cls)
+                if subclass.name is not None}
 
     @classmethod
     def by_name(cls, name):
@@ -44,15 +74,15 @@ class Renderer(object):
             subclass names.
 
         """
-        for subclass in cls.__subclasses__():
-            if subclass.name == name:
-                return subclass()
+        renderers = cls.all_renderers()
+        if name in renderers:
+            return renderers[name]()
         raise UnknownRendererError(name)
 
 
 class PlainTextRenderer(Renderer):
 
-    """ Default renderer. """
+    """Default renderer for plain text output in list format."""
 
     name = "plain"
 
@@ -199,3 +229,171 @@ class PlainTextRenderer(Renderer):
             space = " " * indent if idx > 0 else ""
             lines.append(space + line)
         return "\n".join(lines)
+
+
+class TabularDataRenderer(Renderer):
+
+    """Base renderer for report output in any tabular form."""
+
+    __metaclass__ = abc.ABCMeta
+
+    _stats_fields = ('times', 'upstream_times', 'body_bytes')
+    _list_stats_keys = ("mean", "median", "perc90", "perc75", "perc25")
+
+    def _list_stats(self, list_stats):
+        """Get list of (key, value) tuples for each attribute of ``list_stats``.
+
+        :param list_stats: list statistics object.
+        :type list_stats: :py:class:`analog.report.ListStats`
+        :returns: (key, value) tuples for each ``ListStats`` attribute.
+        :rtype: ``list`` of ``tuple``
+
+        """
+        return zip(self._list_stats_keys,
+                   [list_stats.mean, list_stats.median,
+                    list_stats.perc90, list_stats.perc75, list_stats.perc25])
+
+    def _tabular_data(self, report, path_stats):
+        """Prepare tabular data for output.
+
+        Generate a list of header fields, a list of total values for each field
+        and a list of the same values per path.
+
+        :param report: log analysis report object.
+        :type report: :py:class:`analog.report.Report`
+        :param path_stats: include per path statistics in output.
+        :type path_stats: ``bool``
+        :returns: tuple of table (headers, rows).
+        :rtype: ``tuple``
+
+        """
+        # sorted list of all HTTP verbs in this report and their counts
+        verb_names, verb_counts = zip(*sorted(
+            (verb, count) for (verb, count) in report.verbs))
+        # sorted list of all status codes in this report and their counts
+        status_names, status_counts = zip(*sorted(
+            (str(status), count) for (status, count) in report.status))
+        # all statistical attributes of the report
+        stats = [(stats_field, self._list_stats(getattr(report, stats_field)))
+                 for stats_field in self._stats_fields]
+        stats_names, stats_values = zip(*(
+            ('{0}_{1}'.format(field, analysis), value)
+            for (field, list_stats) in stats
+            for (analysis, value) in list_stats))
+
+        headers = ("path", "requests") + verb_names + status_names + stats_names
+        total = (("total", report.requests) +
+                 verb_counts + status_counts + stats_values)
+
+        rows = []
+        # include path statistics?
+        if path_stats:
+            # get per path values from report, ordered by path
+            for (path, verbs, status, times, utimes, body_bytes) in zip(
+                    report.path_verbs.keys(),
+                    report.path_verbs.values(),
+                    report.path_status.values(),
+                    report.path_times.values(),
+                    report.path_upstream_times.values(),
+                    report.path_body_bytes.values()):
+                requests = report._paths[path]
+                verbs = dict(verbs)
+                status = dict(status)
+                row = [path, requests]
+                row += [verbs.get(name, 0) for name in verb_names]
+                row += [status.get(name, 0) for name in status_names]
+                row += [time[1] for time in self._list_stats(times)]
+                row += [utime[1] for utime in self._list_stats(utimes)]
+                row += [bbytes[1] for bbytes in self._list_stats(body_bytes)]
+                rows.append(row)
+
+        rows.append(total)
+
+        return (list(headers), rows)
+
+
+class ASCIITableRenderer(TabularDataRenderer):
+
+    """Base renderer for report output in ascii-table format."""
+
+    __metaclass__ = abc.ABCMeta
+
+    tabulate_format = None
+
+    def render(self, report, path_stats=False):
+        """Render report statistics using ``tabulate``.
+
+        :param report: log analysis report object.
+        :type report: :py:class:`analog.report.Report`
+        :param path_stats: include per path statistics in output.
+        :type path_stats: ``bool``
+        :returns: output string
+        :rtype: `str`
+
+        """
+        headers, rows = self._tabular_data(report, path_stats)
+        return tabulate(rows,
+                        headers=headers,
+                        tablefmt=self.tabulate_format,
+                        floatfmt='.3f')
+
+
+class SimpleTableRenderer(ASCIITableRenderer):
+
+    """Renderer for tabular report output in simple reSt table format."""
+
+    name = "table"
+    tabulate_format = 'rst'
+
+
+class GridTableRenderer(ASCIITableRenderer):
+
+    """Renderer for tabular report output in grid table format."""
+
+    name = "grid"
+    tabulate_format = 'grid'
+
+
+class SeparatedValuesRenderer(TabularDataRenderer):
+
+    """Base renderer for report output in delimiter-separated values format."""
+
+    __metaclass__ = abc.ABCMeta
+
+    delimiter = None
+
+    def render(self, report, path_stats):
+        """Render report statistics using a CSV writer.
+
+        :param report: log analysis report object.
+        :type report: :py:class:`analog.report.Report`
+        :param path_stats: include per path statistics in output.
+        :type path_stats: ``bool``
+        :returns: output string
+        :rtype: `str`
+
+        """
+        headers, rows = self._tabular_data(report, path_stats)
+
+        stream = io.StringIO()
+        writer = csv.writer(stream, delimiter=self.delimiter)
+        writer.writerow(headers)
+        writer.writerows(rows)
+
+        return stream.getvalue()
+
+
+class CSVRenderer(SeparatedValuesRenderer):
+
+    """Renderer for report output in comma separated values format."""
+
+    name = 'csv'
+    delimiter = ','
+
+
+class TSVRenderer(SeparatedValuesRenderer):
+
+    """Renderer for report output in tab separated values format."""
+
+    name = 'tsv'
+    delimiter = '\t'

@@ -4,6 +4,11 @@ Changelog
 0.1.0 - unreleased
 ------------------
 
+* Add renderers for CSV and TSV output. Use --output [csv|tsv].
+  Unified codebase for all tabular renderers.
+
+* Add renderer for tabular output. Use --output [grid|table].
+
 * Also analyze HTTP verbs distribution for overall report.
 
 * Remove timezone aware datetime handling for the moment.
