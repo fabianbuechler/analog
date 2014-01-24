@@ -29,7 +29,11 @@ class ConfigParser(configparser.ConfigParser):
         """
         try:
             items = re.split(r',|\n', self.get(section, key))
-            return list(filter(None, map(str.strip, items)))
+            try:
+                strclass = unicode
+            except:
+                strclass = str
+            return list(filter(None, map(strclass.strip, items)))
         except configparser.Error:
             return fallback
 
@@ -39,8 +43,8 @@ def main(argv=None):
     analog - Log Analysis Utility.
 
     Name the logfile to analyze (positional argument) or leave it out to read
-    from ``stdin``. This can be handy for piping in filtered logfiles (e.g. with
-    ``grep``).
+    from ``stdin``. This can be handy for piping in filtered logfiles
+    (e.g. with ``grep``).
 
     To analyze for the logfile for specified paths, provide them via ``--path``
     arguments (mutliple times) or list the paths in a file and point analog at
@@ -108,8 +112,8 @@ def main(argv=None):
 
         # read configuration from ini file (default analog.ini)
         config = ConfigParser()
-        if args.conf:
-            config.readfp(args.conf)
+        if args.config:
+            config.readfp(args.config)
         # verbs, status codes and paths to monitor
         verbs = config.getlist(
             'analog', 'verbs', fallback=[

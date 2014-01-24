@@ -14,8 +14,8 @@ class Analyzer:
 
     """Log analysis utility.
 
-    Scan a logfile for logged requests and analyze calculate statistical metrics
-    in a :py:class:`analog.report.Report`.
+    Scan a logfile for logged requests and analyze calculate statistical
+    metrics in a :py:class:`analog.report.Report`.
 
     """
 

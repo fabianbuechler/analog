@@ -245,7 +245,7 @@ class TabularDataRenderer(Renderer):
     _list_stats_keys = ("mean", "median", "perc90", "perc75", "perc25")
 
     def _list_stats(self, list_stats):
-        """Get list of (key, value) tuples for each attribute of ``list_stats``.
+        """Get list of (key,value) tuples for each attribute of ``list_stats``.
 
         :param list_stats: list statistics object.
         :type list_stats: :py:class:`analog.report.ListStats`

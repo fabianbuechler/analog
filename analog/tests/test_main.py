@@ -34,8 +34,7 @@ def test_help(capsys):
         assert analog.main.__doc__ in out
 
         # analog arguments are listed
-        assert '--path' in out
-        assert '--pathconf' in out
+        assert '--config' in out
         assert '--version' in out
         assert '--format' in out
         assert '--regex' in out
@@ -58,13 +57,12 @@ def test_paths(mock_analyze, capsys, tmp_logfile):
         # the --path argument can be specified multiple times, also as -p
         analog.main(['analog',
                      '--format', 'nginx',
-                     '--path', '/foo/bar',
-                     '-p', '/sim/sum',
+                     '--config', '/foo/bar',
                      str(tmp_logfile)])
         mock_analyze.assert_called_once_with(
             log=mock.ANY,
             format='nginx',
-            paths=['/foo/bar', '/sim/sum'],
+            config='/foo/bar',
             max_age=10,
             print_stats=False,
             print_path_stats=False)
