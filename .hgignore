@@ -8,6 +8,7 @@ build
 *.pyo
 .coverage
 .tox
+MANIFEST
 
 syntax: regexp
 
