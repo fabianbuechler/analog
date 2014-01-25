@@ -1,41 +1,12 @@
 """Analog console entry point."""
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-import configparser
 import argparse
 import sys
 import textwrap
-import re
 
 import analog
-
-
-class ConfigParser(configparser.ConfigParser):
-
-    """ Extension of ConfigParser able to parse lists. """
-
-    def getlist(self, section, key, fallback=None):
-        """Get a list from the config with an optional fallback.
-
-        :param section: section name
-        :type section: ``str``
-        :param key: key name
-        :type key: ``str``
-        :param fallback: fallback value if section or key don't exist
-        :type fallback: ``list``
-        :returns: list from config
-        :rtype: ``list``
-
-        """
-        try:
-            items = re.split(r',|\n', self.get(section, key))
-            try:
-                strclass = unicode
-            except:
-                strclass = str
-            return list(filter(None, map(strclass.strip, items)))
-        except configparser.Error:
-            return fallback
+from analog.utils import ConfigParser
 
 
 def main(argv=None):
