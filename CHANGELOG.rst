@@ -4,7 +4,7 @@ Changelog
 0.1.1 - unreleased
 ------------------
 
-
+* Strip VERSION when reading it in setup.py.
 
 0.1.0 - 2014-01-26
 ------------------
