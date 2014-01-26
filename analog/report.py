@@ -75,10 +75,10 @@ class Report(object):
         self.requests = 0
         self._verbs = Counter({verb: 0 for verb in verbs})
         self._status = status_counter()
-        self._paths = Counter()
         self._times = []
         self._upstream_times = []
         self._body_bytes = []
+        self._path_requests = Counter()
         self._path_verbs = defaultdict(Counter)
         self._path_status = defaultdict(status_counter)
         self._path_times = defaultdict(list)
@@ -106,10 +106,10 @@ class Report(object):
         if verb in self._verbs:  # Only keep verbs that are being tracked
             self._verbs[verb] += 1
         self._status.inc(str(status))
-        self._paths[path] += 1
         self._times.append(time)
         self._upstream_times.append(upstream_time)
         self._body_bytes.append(body_bytes)
+        self._path_requests[path] += 1
         self._path_verbs[path][verb] += 1
         self._path_status[path].inc(status)
         self._path_times[path].append(time)
@@ -135,16 +135,6 @@ class Report(object):
 
         """
         return self._status.most_common()
-
-    @property
-    def paths(self):
-        """List paths of all matched requests, ordered by frequency.
-
-        :returns: tuples of path and occurrency count.
-        :rtype: ``list`` of ``tuple``
-
-        """
-        return self._paths.most_common()
 
     @property
     def times(self):
@@ -175,6 +165,16 @@ class Report(object):
 
         """
         return ListStats(self._body_bytes)
+
+    @property
+    def path_requests(self):
+        """List paths of all matched requests, ordered by frequency.
+
+        :returns: tuples of path and occurrency count.
+        :rtype: ``list`` of ``tuple``
+
+        """
+        return self._path_requests.most_common()
 
     @property
     def path_verbs(self):

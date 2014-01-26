@@ -97,9 +97,11 @@ class Analyzer:
         :rtype: :py:class:`analog.report.Report`
 
         """
-        self._now = datetime.datetime.now()
-        self._now = self._now.replace(second=0, microsecond=0)
-        self._min_time = self._now - datetime.timedelta(minutes=self._max_age)
+        if self._max_age is not None:
+            self._now = datetime.datetime.now()
+            self._now = self._now.replace(second=0, microsecond=0)
+            self._min_time = (
+                self._now - datetime.timedelta(minutes=self._max_age))
 
         # start timestamp
         started = time.clock()
@@ -114,13 +116,14 @@ class Analyzer:
                 continue
             log_entry = self._format.entry(match)
 
-            # don't process anything older than max_age
-            timestamp = self._timestamp(log_entry.timestamp)
-            if timestamp < self._min_time:
-                continue
-            # stop processing when now was reached
-            if timestamp > self._now:
-                break
+            if self._max_age is not None:
+                # don't process anything older than max_age
+                timestamp = self._timestamp(log_entry.timestamp)
+                if timestamp < self._min_time:
+                    continue
+                # stop processing when now was reached
+                if timestamp > self._now:
+                    break
 
             # parse request
             path = self._monitor_path(log_entry.path)
@@ -173,7 +176,9 @@ def analyze(log, format, verbs, status_codes, paths=[], max_age=None,
     :rtype: :py:class:`analog.report.Report`
 
     """
-    analyzer = Analyzer(**locals())
+    analyzer = Analyzer(log=log, format=format,
+                        verbs=verbs, status_codes=status_codes,
+                        paths=paths, max_age=max_age, path_stats=path_stats)
     report = analyzer()
 
     # print timing information

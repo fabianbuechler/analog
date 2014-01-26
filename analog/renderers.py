@@ -110,7 +110,7 @@ class PlainTextRenderer(Renderer):
             Status Codes:
                 {status}
 
-            Paths:
+            Path Requests:
                 {paths}
 
             Times [s]:
@@ -125,7 +125,7 @@ class PlainTextRenderer(Renderer):
             self=report,
             verbs=self._indent(self._str_path_counts(report.verbs)),
             status=self._indent(self._str_path_counts(report.status)),
-            paths=self._indent(self._str_path_counts(report.paths)),
+            paths=self._indent(self._str_path_counts(report.path_requests)),
             times=self._indent(self._render_list_stats(report.times)),
             upstream_times=self._indent(
                 self._render_list_stats(report.upstream_times)),
@@ -307,7 +307,7 @@ class TabularDataRenderer(Renderer):
                     report.path_times.values(),
                     report.path_upstream_times.values(),
                     report.path_body_bytes.values()):
-                requests = report._paths[path]
+                requests = report._path_requests[path]
                 verbs = dict(verbs)
                 status = PrefixMatchingCounter(dict(status))
                 row = [path, requests]

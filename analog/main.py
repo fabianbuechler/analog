@@ -99,6 +99,7 @@ def main(argv=None):
                        verbs=verbs,
                        status_codes=status_codes,
                        max_age=args.max_age,
+                       path_stats=args.path_stats,
                        timing=args.timing,
                        output_format=args.output_format)
 
