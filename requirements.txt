@@ -8,5 +8,3 @@ Sphinx
 sphinx_rtd_theme
 tox
 wheel
-
--e .
