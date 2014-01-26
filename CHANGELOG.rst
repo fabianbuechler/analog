@@ -4,6 +4,9 @@ Changelog
 0.1.1 - unreleased
 ------------------
 
+* Add numpy to ``requirements.txt`` since installation via ``setup.py install``
+  does not work.
+
 * Strip VERSION when reading it in setup.py.
 
 0.1.0 - 2014-01-26
