@@ -21,9 +21,9 @@ formats.
     :special-members:
     :exclude-members: __weakref__
 
-``analyze is a convenience wrapper around :py:class:`analog.analyzer.Analyzer`
-``and can act as the main and only required entry point when using analog from
-``code.
+``analyze`` is a convenience wrapper around :py:class:`analog.analyzer.Analyzer`
+and can act as the main and only required entry point when using analog from
+code.
 
 ..  autofunction:: analog.analyzer.analyze
 

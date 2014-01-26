@@ -58,7 +58,7 @@ setup(
     name='analog',
     description='analog - Log Analysis Utility',
     long_description=read('README.rst') + '\n\n' + read('CHANGELOG.rst'),
-    version=read('VERSION'),
+    version=read('VERSION', strip=True),
     url='https://bitbucket.org/fabianbuechler/analog',
     license='MIT license',
     author='Fabian B\xfcchler',
