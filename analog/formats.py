@@ -29,10 +29,10 @@ class LogFormat:
 
     """
 
-    # format pool
+    #: pool of all predefined log formats
     __formats_ = {}
 
-    # required pattern groups
+    #: required pattern groups
     _required_attributes = ('timestamp', 'verb', 'path', 'status',
                             'body_bytes_sent', 'request_time',
                             'upstream_response_time')
@@ -102,11 +102,6 @@ class LogFormat:
         return formats
 
 
-# Nginx combinded_timed:
-#     '$remote_addr - $remote_user [$time_local] "$request" '
-#     '$status $body_bytes_sent "$http_referer" '
-#     '"$http_user_agent" "$http_x_forwarded_for" '
-#     '$request_time $upstream_response_time $pipe';
 NGINX = LogFormat('nginx', r'''
     ^(?P<remote_addr>\S+)\s-\s              # Remote address
     (?P<remote_user>\S+)\s                  # Remote user
@@ -126,3 +121,11 @@ NGINX = LogFormat('nginx', r'''
     (?P<upstream_response_time>[\d\.]+)\s   # Upstream response time
     (?P<pipe>\S+)?$                         # Pipelined request
     ''', time_format='%d/%b/%Y:%H:%M:%S +0000')
+"""Nginx ``combinded_timed`` format::
+
+    '$remote_addr - $remote_user [$time_local] "$request" '
+    '$status $body_bytes_sent "$http_referer" '
+    '"$http_user_agent" "$http_x_forwarded_for" '
+    '$request_time $upstream_response_time $pipe';
+
+"""

@@ -241,7 +241,9 @@ class TabularDataRenderer(Renderer):
 
     __metaclass__ = abc.ABCMeta
 
+    #: field names for ``ListStats`` attributes
     _stats_fields = ('times', 'upstream_times', 'body_bytes')
+    #: attribute names of ``ListStats`` attributes
     _list_stats_keys = ("mean", "median", "perc90", "perc75", "perc25")
 
     def _list_stats(self, list_stats):
@@ -369,6 +371,7 @@ class SeparatedValuesRenderer(TabularDataRenderer):
 
     __metaclass__ = abc.ABCMeta
 
+    #: value delimter. E.g. comma or tab.
     delimiter = None
 
     def render(self, report, path_stats):

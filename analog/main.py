@@ -67,9 +67,8 @@ def main(argv=None):
                         help="Output format")
     # -a / --max-age
     parser.add_argument('-a', '--max-age', action='store', type=int,
-                        default=analog.Analyzer.MAX_AGE,
-                        help="Analyze logs until n minutes age.")
-    # -s / --stats
+                        default=None, help="Analyze logs until n minutes age.")
+    # -ps / --path-stats
     parser.add_argument('-ps', '--path-stats', action='store_true',
                         help="include statistics per path")
     # -t / --timing
@@ -94,20 +93,15 @@ def main(argv=None):
         paths = config.getlist('analog', 'paths', fallback=[])
 
         # analyze logfile and generate report
-        report = analog.analyze(log=args.log,
-                                format=args.format or args.regex,
-                                paths=paths,
-                                verbs=verbs,
-                                status_codes=status_codes,
-                                max_age=args.max_age)
-        # print timing information
-        if args.timing:
-            print("Analyzed logs in {elapsed:.3f}s.\n".format(
-                elapsed=report.execution_time))
+        analog.analyze(log=args.log,
+                       format=args.format or args.regex,
+                       paths=paths,
+                       verbs=verbs,
+                       status_codes=status_codes,
+                       max_age=args.max_age,
+                       timing=args.timing,
+                       output_format=args.output_format)
 
-        # print report in requested output format
-        print(report.render(path_stats=args.path_stats,
-                            output_format=args.output_format))
         parser.exit(0)
 
     except analog.AnalogError as exc:

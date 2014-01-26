@@ -19,10 +19,8 @@ class Analyzer:
 
     """
 
-    MAX_AGE = 10
-
     def __init__(self, log, format, verbs, status_codes,
-                 paths=[], max_age=MAX_AGE, path_stats=False):
+                 paths=[], max_age=None, path_stats=False):
         """Configure log analyzer.
 
         :param log: handle on logfile to read and analyze.
@@ -38,6 +36,7 @@ class Analyzer:
             detected automatically.
         :type paths: ``list`` of ``str``
         :param max_age: Max. age of log entries to analyze in minutes.
+            Unlimited by default.
         :type max_age: ``int``
         :raises: :py:class:`analog.exceptions.MissingFormatError` if no
             ``format`` is specified.
@@ -115,7 +114,7 @@ class Analyzer:
                 continue
             log_entry = self._format.entry(match)
 
-            # don't process anything older than MAX_AGE
+            # don't process anything older than max_age
             timestamp = self._timestamp(log_entry.timestamp)
             if timestamp < self._min_time:
                 continue
@@ -144,24 +143,45 @@ class Analyzer:
         return report
 
 
-def analyze(log, format, verbs, status_codes,
-            paths=[], max_age=Analyzer.MAX_AGE, path_stats=False):
+def analyze(log, format, verbs, status_codes, paths=[], max_age=None,
+            path_stats=False, timing=False, output_format=None):
     """Convenience wrapper around :py:class:`analog.analyzer.Analyzer`.
 
     :param log: handle on logfile to read and analyze.
     :type log: :py:class:`io.TextIOWrapper`
     :param format: log format identifier or regex pattern.
     :type format: ``str``
+    :param verbs: HTTP verbs to be tracked.
+    :type verbs: ``list``
+    :param status_codes: status_codes to be tracked. May be prefixes,
+        e.g. ["100", "2", "3", "4", "404" ]
+    :type status_codes: ``list``
     :param paths: Paths to explicitly analyze. If not defined, paths are
         detected automatically.
     :type paths: ``list`` of ``str``
     :param max_age: Max. age of log entries to analyze in minutes.
+        Unlimited by default.
     :type max_age: ``int``
     :param path_stats: Print per-path analysis report. Default off.
     :type path_stats: ``bool``
+    :param timing: print analysis timing information?
+    :type timing: ``bool``
+    :param output_format: report output format.
+    :type output_format: ``str``
+
     :returns: log analysis report object.
     :rtype: :py:class:`analog.report.Report`
 
     """
     analyzer = Analyzer(**locals())
-    return analyzer()
+    report = analyzer()
+
+    # print timing information
+    if timing:
+        print("Analyzed logs in {elapsed:.3f}s.\n".format(
+            elapsed=report.execution_time))
+
+    # print report in requested output format
+    print(report.render(path_stats=path_stats, output_format=output_format))
+
+    return report

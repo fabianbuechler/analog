@@ -8,7 +8,12 @@ import re
 
 class ConfigParser(configparser.ConfigParser):
 
-    """ Extension of ConfigParser able to parse lists. """
+    """Extension of :py:class:`configparser.ConfigParser` able to parse lists.
+
+    Use ``getlist()`` method to retrieve lists of values separated by comma or
+    newline.
+
+    """
 
     def getlist(self, section, key, fallback=None):
         """Get a list from the config with an optional fallback.

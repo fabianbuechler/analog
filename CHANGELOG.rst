@@ -4,6 +4,8 @@ Changelog
 0.1.0 - unreleased
 ------------------
 
+* Start documentation: quickstart and CLI usage plus API documentation.
+
 * Add renderers for CSV and TSV output. Use --output [csv|tsv].
   Unified codebase for all tabular renderers.
 

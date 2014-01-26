@@ -40,7 +40,7 @@ class Report(object):
     * Number for requests.
     * Response request method (HTTP verb) distribution.
     * Response status code distribution.
-    * Request path distribution.
+    * Requests per path.
     * Response time statistics (mean, median, 90th, 75th and 25th percentiles).
     * Response upstream time statistics (as above).
     * Response body size in bytes statistics (as above).
@@ -53,6 +53,19 @@ class Report(object):
     """
 
     def __init__(self, verbs, status_codes):
+        """Create new log report object.
+
+        Use ``add()`` method to add log entries to be analyzed.
+
+        :param verbs: HTTP verbs to be tracked.
+        :type verbs: ``list``
+        :param status_codes: status_codes to be tracked. May be prefixes,
+            e.g. ["100", "2", "3", "4", "404" ]
+        :type status_codes: ``list``
+        :returns: Report analysis object
+        :rtype: :py:class:`analog.report.Report`
+
+        """
 
         def status_counter():
             return PrefixMatchingCounter(
