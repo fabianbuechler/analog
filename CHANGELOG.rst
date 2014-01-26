@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.1.0 - unreleased
+0.1.0 - 2014-01-26
 ------------------
 
 * Start documentation: quickstart and CLI usage plus API documentation.
