@@ -40,14 +40,6 @@ try:
     del unittest.mock
 except ImportError:
     requirements.append('mock')
-# statistics (3.4+) or numpy
-# NOTE: setup.py install might fail due to
-#       https://github.com/numpy/numpy/issues/2434
-try:
-    import statistics
-    del statistics
-except ImportError:
-    requirements.append('numpy')
 # configparser available? (3+)
 try:
     import configparser

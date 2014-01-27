@@ -6,6 +6,11 @@ from collections import Counter, defaultdict, OrderedDict
 from analog.renderers import Renderer
 from analog.utils import PrefixMatchingCounter
 
+try:
+    from statistics import mean, median
+except ImportError:
+    from analog.statistics import mean, median
+
 
 class ListStats(object):
 
@@ -22,12 +27,8 @@ class ListStats(object):
         :type elements: ``list``
 
         """
-        import numpy
-        self.mean = numpy.mean(elements) if elements else None
-        self.median = numpy.median(elements) if elements else None
-        self.perc90 = numpy.percentile(elements, 90) if elements else None
-        self.perc75 = numpy.percentile(elements, 75) if elements else None
-        self.perc25 = numpy.percentile(elements, 25) if elements else None
+        self.mean = mean(elements) if elements else None
+        self.median = median(elements) if elements else None
 
 
 class Report(object):
@@ -40,14 +41,14 @@ class Report(object):
     * Response request method (HTTP verb) distribution.
     * Response status code distribution.
     * Requests per path.
-    * Response time statistics (mean, median, 90th, 75th and 25th percentiles).
-    * Response upstream time statistics (as above).
-    * Response body size in bytes statistics (as above).
+    * Response time statistics (mean, median).
+    * Response upstream time statistics (mean, median).
+    * Response body size in bytes statistics (mean, median).
     * Per path request method (HTTP verb) distribution.
     * Per path response status code distribution.
-    * Per path response time statistics (as above).
-    * Per path response upstream time statistics (as above).
-    * Per path response body size in bytes statistics (as above).
+    * Per path response time statistics (mean, median).
+    * Per path response upstream time statistics (mean, median).
+    * Per path response body size in bytes statistics (mean, median).
 
     """
 

@@ -198,9 +198,6 @@ class PlainTextRenderer(Renderer):
         return textwrap.dedent("""\
             {stats.mean:>10.5}   mean
             {stats.median:>10.5}   median
-            {stats.perc90:>10.5}   90th percentile
-            {stats.perc75:>10.5}   75th percentile
-            {stats.perc25:>10.5}   25th percentile
             """).format(stats=list_stats)
 
     def _str_path_counts(self, path_counts):
@@ -244,7 +241,7 @@ class TabularDataRenderer(Renderer):
     #: field names for ``ListStats`` attributes
     _stats_fields = ('times', 'upstream_times', 'body_bytes')
     #: attribute names of ``ListStats`` attributes
-    _list_stats_keys = ("mean", "median", "perc90", "perc75", "perc25")
+    _list_stats_keys = ("mean", "median")
 
     def _list_stats(self, list_stats):
         """Get list of (key,value) tuples for each attribute of ``list_stats``.
@@ -255,9 +252,7 @@ class TabularDataRenderer(Renderer):
         :rtype: ``list`` of ``tuple``
 
         """
-        return zip(self._list_stats_keys,
-                   [list_stats.mean, list_stats.median,
-                    list_stats.perc90, list_stats.perc75, list_stats.perc25])
+        return zip(self._list_stats_keys, [list_stats.mean, list_stats.median])
 
     def _tabular_data(self, report, path_stats):
         """Prepare tabular data for output.

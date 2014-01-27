@@ -10,7 +10,7 @@ pytest:
 		-m py.test
 	@echo "✓ ran tests and collected coverage\n"
 	@coverage report
-	@coverage html --title="analog coverage report" -d docs/_coverage/
+	@coverage html --title="analog coverage report"
 	@echo "✓ created coverage reports in docs/_coverage/\n"
 
 flake8:
@@ -33,4 +33,11 @@ docs:
 	@cd docs && make clean && make html
 	@echo "✓ built docs.\n"
 
-.PHONY: all pytest flake8 pep257 docs
+release:
+	@echo "\n\n"### releasing to pypi###\n"
+	@python setup.py sdist bdist_wheel upload
+	@rm -r built
+	@rm -r dist
+	@echo "✓ release uploaded.\n"
+
+.PHONY: all pytest flake8 pep257 docs release
