@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.1.2 - unreleased
+0.1.3 - 2013-01-27
 ------------------
 
 * Fix API-docs building on readthedocs.
