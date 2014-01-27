@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.1.7 - 2014-01-27
+------------------
+
+* Giving up on VERSIONS file. Does not work with different distributions.
+
 0.1.6 - 2014-01-27
 ------------------
 

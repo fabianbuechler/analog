@@ -4,6 +4,9 @@ from __future__ import (absolute_import, division, print_function,
 from setuptools import setup, find_packages
 
 
+VERSION = '0.1.7'
+
+
 def read(path, strip=False):
     """Read file at ``path`` and return content. Opt., ``strip`` whitespace."""
     content = ''
@@ -52,7 +55,7 @@ setup(
     name='analog',
     description='analog - Log Analysis Utility',
     long_description=read('README.rst') + '\n\n' + read('CHANGELOG.rst'),
-    version=read('analog/VERSION', strip=True),
+    version=VERSION,
     url='https://bitbucket.org/fabianbuechler/analog',
     license='MIT license',
     author='Fabian B\xfcchler',
@@ -61,7 +64,6 @@ setup(
     classifiers=classifiers,
     install_requires=requirements,
     packages=find_packages(),
-    data_files=[('', ['analog/VERSION'])],
     py_modules=['analog'],
     zip_safe=False,
 )
