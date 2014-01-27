@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.1.6 - unreleased
+0.1.6 - 2014-01-27
 ------------------
 
 * Include CHANGELOG in documentation.
