@@ -1,0 +1,10 @@
+coverage
+flake8
+ipython
+ipdb
+pep257
+pytest
+Sphinx
+sphinx_rtd_theme
+tox
+wheel
