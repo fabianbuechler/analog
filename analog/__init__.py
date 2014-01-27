@@ -29,7 +29,6 @@ __all__ = (
 
 
 __version__ = None
-with open(os.path.abspath(
-        os.path.join(os.path.dirname(analog.__file__),
-                     os.path.pardir, 'VERSION'))) as vfp:
+with open(os.path.abspath(os.path.join(
+        os.path.dirname(analog.__file__), 'VERSION'))) as vfp:
     __version__ = vfp.read().strip()

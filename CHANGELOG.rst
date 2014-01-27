@@ -1,6 +1,13 @@
 Changelog
 =========
 
+0.1.6 - 2014-01-27
+------------------
+
+* Include CHANGELOG in documentation.
+
+* Move VERSION file to analog module to make sure it can be installed.
+
 0.1.5 - 2014-01-27
 ------------------
 

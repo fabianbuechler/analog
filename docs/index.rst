@@ -29,6 +29,7 @@ Contents
 
    quickstart
    api
+   changelog
 
 ..  include:: ../AUTHORS
 
