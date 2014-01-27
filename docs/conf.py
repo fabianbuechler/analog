@@ -14,7 +14,9 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 import os
-import sys
+
+import analog
+
 
 # on_rtd is whether we are on readthedocs.org,
 # this line of code grabbed from docs.readthedocs.org
@@ -67,7 +69,8 @@ copyright = '2014, Fabian Büchler'
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 #
-with open('../VERSION') as vfp:
+with open(os.path.abspath(os.path.join(
+        os.path.dirname(analog.__file__), 'VERSION'))) as vfp:
     # The short X.Y version.
     version = vfp.read().strip()
     # The full version, including alpha/beta/rc tags.

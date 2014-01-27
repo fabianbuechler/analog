@@ -52,7 +52,7 @@ setup(
     name='analog',
     description='analog - Log Analysis Utility',
     long_description=read('README.rst') + '\n\n' + read('CHANGELOG.rst'),
-    version=read('VERSION', strip=True),
+    version=read('analog/VERSION', strip=True),
     url='https://bitbucket.org/fabianbuechler/analog',
     license='MIT license',
     author='Fabian B\xfcchler',
@@ -61,7 +61,7 @@ setup(
     classifiers=classifiers,
     install_requires=requirements,
     packages=find_packages(),
-    data_files=[('', ['VERSION'])],
+    data_files=[('', ['analog/VERSION'])],
     py_modules=['analog'],
     zip_safe=False,
 )
