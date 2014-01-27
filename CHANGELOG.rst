@@ -10,8 +10,8 @@ Changelog
 ------------------
 
 * Move fallback for verbs, status_codes and paths configuration to ``analyzer``.
-  Also use the fallbacks in :py:meth:`analog.analyzer.Analyzer.__init__` and
-  :py:func:`analog.analyzer.analyze`.
+  Also use the fallbacks in ``analog.analyzer.Analyzer.__init__`` and
+  ``analog.analyzer.analyze``.
 
 0.1.3 - 2014-01-27
 ------------------
