@@ -11,7 +11,7 @@ Analyzer
 
 The ``Analyzer`` is the main logfile parser class. It uses a
 :py:class:`analog.formats.LogFormat` instance to parse the log entries and
-passes them on to a :py:class:`analog.report:Report` instance for statistical
+passes them on to a :py:class:`analog.report.Report` instance for statistical
 analysis. The report itsself can be passed through a
 :py:class:`analog.renderers.Renderer` subclass for different report output
 formats.
@@ -127,3 +127,11 @@ Utils
     :members: getlist
 
 ..  autoclass:: analog.utils.PrefixMatchingCounter
+
+.. _api_exceptions:
+
+Exceptions
+==========
+
+..  automodule:: analog.exceptions
+    :members:
