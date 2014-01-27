@@ -1,7 +1,14 @@
 Changelog
 =========
 
-0.1.3 - 2013-01-27
+0.1.4 - 2014-01-27
+------------------
+
+* Move fallback for verbs, status_codes and paths configuration to ``analyzer``.
+  Also use the fallbacks in :py:meth:`analog.analyzer.Analyzer.__init__` and
+  :py:func:`analog.analyzer.analyze`.
+
+0.1.3 - 2014-01-27
 ------------------
 
 * Fix API-docs building on readthedocs.
