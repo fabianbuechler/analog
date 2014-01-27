@@ -10,7 +10,7 @@ pytest:
 		-m py.test
 	@echo "✓ ran tests and collected coverage\n"
 	@coverage report
-	@coverage html --title="analog coverage report" -d docs/_coverage/
+	@coverage html --title="analog coverage report"
 	@echo "✓ created coverage reports in docs/_coverage/\n"
 
 flake8:
