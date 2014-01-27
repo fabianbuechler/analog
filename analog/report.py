@@ -3,8 +3,6 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 from collections import Counter, defaultdict, OrderedDict
 
-import numpy
-
 from analog.renderers import Renderer
 from analog.utils import PrefixMatchingCounter
 
@@ -24,6 +22,7 @@ class ListStats(object):
         :type elements: ``list``
 
         """
+        import numpy
         self.mean = numpy.mean(elements) if elements else None
         self.median = numpy.median(elements) if elements else None
         self.perc90 = numpy.percentile(elements, 90) if elements else None
