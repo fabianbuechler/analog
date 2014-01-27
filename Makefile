@@ -34,9 +34,9 @@ docs:
 	@echo "✓ built docs.\n"
 
 release:
-	@echo "\n\n"### releasing to pypi###\n"
+	@echo "\n\n### releasing to pypi###\n"
 	@python setup.py sdist bdist_wheel upload
-	@rm -r built
+	@rm -r build
 	@rm -r dist
 	@echo "✓ release uploaded.\n"
 
