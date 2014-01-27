@@ -4,7 +4,7 @@ from __future__ import (absolute_import, division, print_function,
 from setuptools import setup, find_packages
 
 
-VERSION = '0.1.7.dev'
+VERSION = '0.1.7'
 
 
 def read(path, strip=False):
