@@ -3,6 +3,7 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 import os
 
+import analog
 from analog.analyzer import Analyzer, analyze
 from analog.exceptions import (AnalogError, InvalidFormatExpressionError,
                                MissingFormatError, UnknownRendererError)
@@ -28,6 +29,7 @@ __all__ = (
 
 
 __version__ = None
-with open(os.path.abspath(os.path.join(os.path.dirname(__file__),
-                                       os.path.pardir, 'VERSION'))) as vfp:
+with open(os.path.abspath(
+        os.path.join(os.path.dirname(analog.__file__),
+                     os.path.pardir, 'VERSION'))) as vfp:
     __version__ = vfp.read().strip()
