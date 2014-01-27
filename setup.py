@@ -29,7 +29,7 @@ classifiers = [
     'Topic :: Utilities',
     'Programming Language :: Python :: 3'] + [
     'Programming Language :: Python :: {0}'.format(pyv)
-    for pyv in "2.6 2.7 3.0 3.1 3.2 3.3".split()
+    for pyv in "2.7 3.3".split()
 ]
 
 
@@ -41,6 +41,8 @@ try:
 except ImportError:
     requirements.append('mock')
 # statistics (3.4+) or numpy
+# NOTE: setup.py install might fail due to
+#       https://github.com/numpy/numpy/issues/2434
 try:
     import statistics
     del statistics
@@ -67,6 +69,7 @@ setup(
     classifiers=classifiers,
     install_requires=requirements,
     packages=find_packages(),
+    data_files=[('', ['VERSION'])],
     py_modules=['analog'],
     zip_safe=False,
 )
