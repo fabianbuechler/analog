@@ -68,6 +68,7 @@ setup(
     classifiers=classifiers,
     install_requires=requirements,
     packages=find_packages(),
+    data_files=[('', ['VERSION'])],
     py_modules=['analog'],
     zip_safe=False,
 )
