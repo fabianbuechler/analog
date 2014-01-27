@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.1.5 - unreleased
+0.1.5 - 2014-01-27
 ------------------
 
 * Replace numpy with backport of statistics for mean and median calculation.
