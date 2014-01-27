@@ -41,11 +41,12 @@ try:
 except ImportError:
     requirements.append('mock')
 # statistics (3.4+) or numpy
-try:
-    import statistics
-    del statistics
-except ImportError:
-    requirements.append('numpy')
+# TODO: add once https://github.com/numpy/numpy/issues/2434 is fixed
+# try:
+#     import statistics
+#     del statistics
+# except ImportError:
+#     requirements.append('numpy')
 # configparser available? (3+)
 try:
     import configparser
