@@ -10,6 +10,14 @@ from analog.formats import LogFormat
 from analog.report import Report
 
 
+#: Default verbs to monitor if unconfigured.
+DEFAULT_VERBS = ['DELETE', 'GET', 'PATCH', 'POST', 'PUT']
+#: Default status codes to monitor if unconfigured.
+DEFAULT_STATUS_CODES = [1, 2, 3, 4, 5]
+#: Default paths (all) to monitor if unconfigured.
+DEFAULT_PATHS = []
+
+
 class Analyzer:
 
     """Log analysis utility.
@@ -19,8 +27,9 @@ class Analyzer:
 
     """
 
-    def __init__(self, log, format, verbs, status_codes,
-                 paths=[], max_age=None, path_stats=False):
+    def __init__(self, log, format,
+                 verbs=DEFAULT_VERBS, status_codes=DEFAULT_STATUS_CODES,
+                 paths=DEFAULT_PATHS, max_age=None, path_stats=False):
         """Configure log analyzer.
 
         :param log: handle on logfile to read and analyze.
@@ -28,12 +37,15 @@ class Analyzer:
         :param format: log format identifier or regex pattern.
         :type format: ``str``
         :param verbs: HTTP verbs to be tracked.
+            Defaults to :py:data:`analog.analyzer.DEFAULT_VERBS`.
         :type verbs: ``list``
         :param status_codes: status_codes to be tracked. May be prefixes,
-            e.g. ["100", "2", "3", "4", "404" ]
+            e.g. ["100", "2", "3", "4", "404" ].
+            Defaults to :py:data:`analog.analyzer.DEFAULT_STATUS_CODES`.
         :type status_codes: ``list``
         :param paths: Paths to explicitly analyze. If not defined, paths are
             detected automatically.
+            Defaults to :py:data:`analog.analyzer.DEFAULT_PATHS`.
         :type paths: ``list`` of ``str``
         :param max_age: Max. age of log entries to analyze in minutes.
             Unlimited by default.
@@ -146,8 +158,9 @@ class Analyzer:
         return report
 
 
-def analyze(log, format, verbs, status_codes, paths=[], max_age=None,
-            path_stats=False, timing=False, output_format=None):
+def analyze(log, format, verbs=DEFAULT_VERBS, status_codes=DEFAULT_STATUS_CODES,
+            paths=DEFAULT_PATHS, max_age=None, path_stats=False, timing=False,
+            output_format=None):
     """Convenience wrapper around :py:class:`analog.analyzer.Analyzer`.
 
     :param log: handle on logfile to read and analyze.
@@ -155,12 +168,15 @@ def analyze(log, format, verbs, status_codes, paths=[], max_age=None,
     :param format: log format identifier or regex pattern.
     :type format: ``str``
     :param verbs: HTTP verbs to be tracked.
+        Defaults to :py:data:`analog.analyzer.DEFAULT_VERBS`.
     :type verbs: ``list``
     :param status_codes: status_codes to be tracked. May be prefixes,
-        e.g. ["100", "2", "3", "4", "404" ]
+        e.g. ["100", "2", "3", "4", "404" ].
+        Defaults to :py:data:`analog.analyzer.DEFAULT_STATUS_CODES`.
     :type status_codes: ``list``
     :param paths: Paths to explicitly analyze. If not defined, paths are
         detected automatically.
+        Defaults to :py:data:`analog.analyzer.DEFAULT_PATHS`.
     :type paths: ``list`` of ``str``
     :param max_age: Max. age of log entries to analyze in minutes.
         Unlimited by default.

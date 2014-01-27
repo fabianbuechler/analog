@@ -27,6 +27,10 @@ code.
 
 ..  autofunction:: analog.analyzer.analyze
 
+..  autodata:: analog.analyzer.DEFAULT_VERBS
+..  autodata:: analog.analyzer.DEFAULT_STATUS_CODES
+..  autodata:: analog.analyzer.DEFAULT_PATHS
+
 .. _api_logformat:
 
 Log Format

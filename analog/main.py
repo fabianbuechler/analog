@@ -6,6 +6,7 @@ import sys
 import textwrap
 
 import analog
+from analog.analyzer import DEFAULT_VERBS, DEFAULT_STATUS_CODES, DEFAULT_PATHS
 from analog.utils import ConfigParser
 
 
@@ -39,7 +40,7 @@ def main(argv=None):
         formatter_class=argparse.RawDescriptionHelpFormatter)
 
     # -c / --config
-    parser.add_argument('-c', '--config', action='store', default='analog.ini',
+    parser.add_argument('-c', '--config', action='store', default=None,
                         type=argparse.FileType('r'),
                         help="config file")
     # -v / --version
@@ -85,12 +86,10 @@ def main(argv=None):
         if args.config:
             config.readfp(args.config)
         # verbs, status codes and paths to monitor
-        verbs = config.getlist(
-            'analog', 'verbs', fallback=[
-                'DELETE', 'GET', 'PATCH', 'POST', 'PUT'])
-        status_codes = config.getlist(
-            'analog', 'status_codes', fallback=[1, 2, 3, 4, 5])
-        paths = config.getlist('analog', 'paths', fallback=[])
+        verbs = config.getlist('analog', 'verbs', fallback=DEFAULT_VERBS)
+        status_codes = config.getlist('analog', 'status_codes',
+                                      fallback=DEFAULT_STATUS_CODES)
+        paths = config.getlist('analog', 'paths', fallback=DEFAULT_PATHS)
 
         # analyze logfile and generate report
         analog.analyze(log=args.log,
