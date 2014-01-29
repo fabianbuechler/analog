@@ -5,6 +5,5 @@ include LICENSE
 include Makefile
 include README.rst
 include requirements.txt
-recursive-exclude __pycache__
-recursive-include analog
+recursive-include analog *
 recursive-include docs *.rst
