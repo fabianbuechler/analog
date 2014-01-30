@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.1.8 - unreleased
+0.2.0 - 2014-01-30
 ------------------
 
 * Allow specifying all ``analog`` arguments in a file for convenience.
