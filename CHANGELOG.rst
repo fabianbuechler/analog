@@ -4,7 +4,7 @@ Changelog
 0.1.8 - unreleased
 ------------------
 
-
+* Allow specifying all ``analog`` arguments in a file for convenience.
 
 0.1.7 - 2014-01-27
 ------------------
