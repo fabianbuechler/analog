@@ -9,6 +9,8 @@ Changelog
 0.2.0 - 2014-01-30
 ------------------
 
+* Remove dependency on configparser package for Python 2.x.
+
 * Allow specifying all ``analog`` arguments in a file for convenience.
 
 0.1.7 - 2014-01-27

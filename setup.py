@@ -43,12 +43,6 @@ try:
     del unittest.mock
 except ImportError:
     requirements.append('mock')
-# configparser available? (3+)
-try:
-    import configparser
-    del configparser
-except ImportError:
-    requirements.append('configparser')
 
 
 setup(
