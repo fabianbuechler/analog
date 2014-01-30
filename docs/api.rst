@@ -4,6 +4,16 @@
 Analog API
 ==========
 
+.. _api_main:
+
+``analog`` Command
+==================
+
+The primary way to invoke analog is via the ``analog`` command which calls
+:py:func:`analog.main.main`.
+
+..  autofunction:: analog.main.main
+
 .. _api_analyzer:
 
 Analyzer
@@ -127,8 +137,8 @@ Separated Values
 Utils
 =====
 
-..  autoclass:: analog.utils.ConfigParser
-    :members: getlist
+..  autoclass:: analog.utils.AnalogArgumentParser
+    :members: convert_arg_line_to_args
 
 ..  autoclass:: analog.utils.PrefixMatchingCounter
 

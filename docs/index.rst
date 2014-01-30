@@ -19,6 +19,17 @@ Analog is a weblog analysis utility that provides these metrics:
 * Per path response upstream time statistics (mean, median).
 * Per path response body size in bytes statistics (mean, median).
 
+Code and issues are on `bitbucket.org/fabianbuechler/analog
+<https://bitbucket.org/fabianbuechler/analog>`_. Please also post feature
+requests there.
+
+Analog can be installed from PyPI at `pypi.python.org/pypi/analog
+<https://pypi.python.org/pypi/analog>`_:
+
+..  code-block:: bash
+
+    $ pip install analog
+
 .. _contents:
 
 Contents

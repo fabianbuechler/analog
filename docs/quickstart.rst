@@ -17,16 +17,14 @@ different request methods (e.g. ``GET``, ``PUT``) and response status codes
 to standard out as a simple list. Use normal piping to save the report output in
 a file.
 
+For details on the ``analog`` command see :py:func:`analog.main.main`
+
 .. _options:
 
 Options
 =======
 
 ``analog`` has these options:
-
-``-c`` / ``--config``
-    Configuration file for simple definition of request methods (HTTP verbs)
-    response status codes and paths to monitor. See :ref:`config` for details.
 
 ``-f`` / ``--format``
     Log format identifier. Currently only ``nginx`` is predefined. Alternatively
@@ -44,6 +42,19 @@ Options
     ``grid``, ``csv`` and ``tsv`` for tabuular formats. For details see
     :ref:`the available report renderers <api_renderers>`
 
+``-p`` / ``--path``
+    Path(s) to monitor. If not provided, all distinct paths will be analyzed.
+    Groups paths by matching the beginng of the log entry values.
+
+``-v`` / ``--verb``
+    HTTP verbs(s) to monitor. If not provided, by default ``DELETE``, ``GET``,
+    ``PATCH``, ``POST`` and ``PUT`` will be analyzed.
+
+``-s`` / ``--status``
+    Response status codes(s) to monitor. If not provided, by default ``1``,
+    ``2``, ``3``, ``4`` and ``5`` are analyzed.
+    Groups paths by matching the beginng of the log entry values.
+
 ``-a`` / ``--max-age``
     Limit the maximum age of log entries to analyze in minutes. Useful for
     continuous analysis of the same logfile (e.g. the last ten minutes every ten
@@ -59,34 +70,37 @@ Options
 ``-v`` / ``--version``
     Print analog version and exit.
 
-.. _config:
+``-h`` / ``--help``
+    Print manual and exit.
 
-Configuration
-=============
 
-The configuration file passed via ``--config`` can be used to define:
+.. _options_file:
 
-*   HTTP *verbs* (request methods) to monitor.
+Options from File
+-----------------
 
-    By default all request methods are monitored. By specifying ``verbs`` you
-    can limit to the ones interesting to you.
+To specify the options via a file, call ``analog`` like this:
 
-*   Response *status codes* to monitor (can be grouped).
+..  code-block:: bash
 
-    By default all separate status codes are monitored. Specify ``status_codes``
-    to monitor specific ones. Status can be grouped by defining just the first
-    characters. E.g. ``4`` to group all ``4xx`` responses like ``400``, ``401``,
-    ``404``, ``409``
+    $ analog @arguments.txt logfile.log
 
-*   Request *paths* to monitor (can be grouped).
+The ``arguments.txt`` (can have any name) contains one argument per line.
+Arguments and their values can also be comma- or whitespace-separated on one
+line. For example::
 
-    By default all exact request paths are monitored. By specifying ``paths``
-    these can be limited to a certain set. Also paths are grouped. E.g.
-    specifying ``/foo`` would monitor ``/foo/bar`` as well as just ``/foo``.
+    --format=nginx
+    -o       table
+    --verb   GET, POST, PUT
+    --verb   PATCH
+    --status 404, 500
+    --path   /foo/bar
+    --path   /baz
+    --path-stats
+    -t
+    some_logfile.log
 
-    Note that paths are evaluated in order of specification. Thus more specific
-    paths should be listed first. E.g. ``/foo/bar`` before ``/foo`` would track
-    both.
+See :py:class:`analog.utils.AnalogArgumentParser` for details.
 
 Example
 -------

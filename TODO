@@ -1,0 +1,19 @@
+============
+Analog TODOs
+============
+
+CLI:
+  ☐ All arguments configurable via iniconfig.
+
+Analyzer:
+  ☐ More predefined log formats.
+
+Documentation:
+  ☐ Advanced usage examples in docs.
+  ☐ Zabbix recipe in docs.
+
+Ideas:
+  ☐ Add different analysis types.
+    ☐ Current Analyzer -> RequestAnalyzer.
+    ☐ Visitor analysis.
+    ☐ User agent analysis.
