@@ -30,9 +30,9 @@ classifiers = [
     'Topic :: System :: Monitoring',
     'Topic :: System :: Systems Administration',
     'Topic :: Utilities',
-    'Programming Language :: Python :: 3'] + [
+    'Programming Language :: Python :: Implementation :: PyPy'] + [
     'Programming Language :: Python :: {0}'.format(pyv)
-    for pyv in "2.7 3.3".split()
+    for pyv in '2.7 3.3'.split()
 ]
 
 
