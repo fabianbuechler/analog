@@ -6,5 +6,6 @@ pep257
 pytest
 Sphinx
 sphinx_rtd_theme
+sphinxcontrib-napoleon
 tox
 wheel
