@@ -1,0 +1,9 @@
+include *.py
+include AUTHORS
+include CHANGELOG.rst
+include LICENSE
+include Makefile
+include README.rst
+include requirements.txt
+recursive-include analog *
+recursive-include docs *.rst
