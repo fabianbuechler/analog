@@ -4,6 +4,8 @@ Changelog
 0.2.1 - unreleased
 ------------------
 
+* Ignore __init__.py at PEP257 checks since __all__ is not properly supported.
+
 * Fix custom log format definitions. Format selection in CLI via subcommands.
 
 * Add pypy to tox environments.

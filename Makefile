@@ -25,7 +25,7 @@ flake8:
 
 pep257:
 	@echo "\n\n### pep257 ###\n"
-	@pep257 analog
+	@pep257 --match='(?!test_|__init__).*\.py' analog
 	@echo "✓ pep257 report complete\n"
 
 docs:
