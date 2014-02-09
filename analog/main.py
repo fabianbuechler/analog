@@ -77,7 +77,7 @@ def main(argv=None):
                         default=DEFAULT_STATUS_CODES,
                         help="status codes to monitor (repeat for multiple)")
     # -a / --max_age
-    common.add_argument('-a', '--max_age',
+    common.add_argument('-a', '--max-age',
                         action='store',
                         type=int,
                         default=None,
