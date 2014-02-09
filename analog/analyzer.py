@@ -2,7 +2,6 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 import datetime
-import re
 import time
 
 from analog.exceptions import MissingFormatError
@@ -27,15 +26,19 @@ class Analyzer:
 
     """
 
-    def __init__(self, log, format,
+    def __init__(self, log, format, pattern=None, time_format=None,
                  verbs=DEFAULT_VERBS, status_codes=DEFAULT_STATUS_CODES,
                  paths=DEFAULT_PATHS, max_age=None, path_stats=False):
         """Configure log analyzer.
 
         :param log: handle on logfile to read and analyze.
         :type log: :py:class:`io.TextIOWrapper`
-        :param format: log format identifier or regex pattern.
+        :param format: log format identifier or 'custom'.
         :type format: ``str``
+        :param pattern: custom log format pattern expression.
+        :type pattern: ``str``
+        :param time_format: log entry timestamp format (strftime compatible).
+        :type time_format: ``str``
         :param verbs: HTTP verbs to be tracked.
             Defaults to :py:data:`analog.analyzer.DEFAULT_VERBS`.
         :type verbs: ``list``
@@ -55,14 +58,17 @@ class Analyzer:
 
         """
         self._log = log
-        if not format:
-            raise MissingFormatError(
-                "Require log format. Specify format name or regex pattern.")
         formats = LogFormat.all_formats()
         if format in formats:
             self._format = formats[format]
+        elif format == 'custom':
+            self._format = LogFormat('custom',
+                                     pattern=pattern,
+                                     time_format=time_format)
         else:
-            self._format = LogFormat('custom', re.escape(format))
+            raise MissingFormatError(
+                "Require log format. Specify format name or custom regex "
+                "pattern and timestamp format.")
         self._verbs = verbs
         self._status_codes = status_codes
         self._pathconf = paths
@@ -158,15 +164,20 @@ class Analyzer:
         return report
 
 
-def analyze(log, format, verbs=DEFAULT_VERBS, status_codes=DEFAULT_STATUS_CODES,
+def analyze(log, format, pattern=None, time_format=None,
+            verbs=DEFAULT_VERBS, status_codes=DEFAULT_STATUS_CODES,
             paths=DEFAULT_PATHS, max_age=None, path_stats=False, timing=False,
             output_format=None):
     """Convenience wrapper around :py:class:`analog.analyzer.Analyzer`.
 
     :param log: handle on logfile to read and analyze.
     :type log: :py:class:`io.TextIOWrapper`
-    :param format: log format identifier or regex pattern.
+    :param format: log format identifier or 'custom'.
     :type format: ``str``
+    :param pattern: custom log format pattern expression.
+    :type pattern: ``str``
+    :param time_format: log entry timestamp format (strftime compatible).
+    :type time_format: ``str``
     :param verbs: HTTP verbs to be tracked.
         Defaults to :py:data:`analog.analyzer.DEFAULT_VERBS`.
     :type verbs: ``list``
@@ -193,6 +204,7 @@ def analyze(log, format, verbs=DEFAULT_VERBS, status_codes=DEFAULT_STATUS_CODES,
 
     """
     analyzer = Analyzer(log=log, format=format,
+                        pattern=pattern, time_format=time_format,
                         verbs=verbs, status_codes=status_codes,
                         paths=paths, max_age=max_age, path_stats=path_stats)
     report = analyzer()

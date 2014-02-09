@@ -11,8 +11,11 @@ from analog.report import Report
 from analog.renderers import Renderer
 
 
+__version__ = '0.2.1.dev'
+
+
 __all__ = (
-    '__version__',
+    __version__,
     AnalogError,
     analyze,
     Analyzer,
@@ -24,6 +27,3 @@ __all__ = (
     Report,
     UnknownRendererError,
 )
-
-
-__version__ = '0.2.1.dev'

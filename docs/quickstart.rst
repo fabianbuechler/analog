@@ -8,7 +8,7 @@ Use the ``analog`` CLI to start the analysis:
 
 ..  code-block:: bash
 
-    $ analog --format nginx /var/log/nginx/mysite.access.log
+    $ analog nginx /var/log/nginx/mysite.access.log
 
 This invokes the analyzer with a predefined Nginx log format and will by default
 parse the complete logfile for all different request paths and analyze all
@@ -26,16 +26,18 @@ Options
 
 ``analog`` has these options:
 
-``-f`` / ``--format``
-    Log format identifier. Currently only ``nginx`` is predefined. Alternatively
-    a regular expression pattern can be defined manually using ``--regex``.
+``format``
+    Log format identifier. Currently only ``nginx`` is predefined. Choose
+    ``custom`` to define a custom log entry pattern via ``--pattern-regex`` and
+    ``--time-format``.
 
-``-r`` / ``--regex``
-    Regular expression log format pattern. Define named groups for all
-    attributes to match. Required attributes are: ``timestamp``, ``verb``,
-    ``path``, ``status``, ``body_bytes_sent``, ``request_time``,
-    ``upstream_response_time``. See :ref:`log formats <api_logformat>` for
-    details.
+``-v`` / ``--version``
+    Print analog version and exit.
+
+``-h`` / ``--help``
+    Print manual and exit.
+
+Each ``format`` subcommand has the following options:
 
 ``-o`` / ``--output``
     Output format. Defaults to plaintext list output. Choose from ``table``,
@@ -67,12 +69,18 @@ Options
 ``-t`` / ``--timing``
     Tracks and prints analysis time.
 
-``-v`` / ``--version``
-    Print analog version and exit.
+When choosing the ``custom`` log ``format``, these options are available
+additionally:
 
-``-h`` / ``--help``
-    Print manual and exit.
+``-pr`` / ``--pattern-regex``
+    Regular expression log format pattern. Define named groups for all
+    attributes to match. Required attributes are: ``timestamp``, ``verb``,
+    ``path``, ``status``, ``body_bytes_sent``, ``request_time``,
+    ``upstream_response_time``. See :ref:`log formats <api_logformat>` for
+    details.
 
+``-tf`` / ``--time-format``
+    Log entry timestamp format definition (``strftime`` compatible).
 
 .. _options_file:
 
@@ -89,7 +97,7 @@ The ``arguments.txt`` (can have any name) contains one argument per line.
 Arguments and their values can also be comma- or whitespace-separated on one
 line. For example::
 
-    --format=nginx
+    nginx
     -o       table
     --verb   GET, POST, PUT
     --verb   PATCH
@@ -98,20 +106,5 @@ line. For example::
     --path   /baz
     --path-stats
     -t
-    some_logfile.log
 
 See :py:class:`analog.utils.AnalogArgumentParser` for details.
-
-Example
--------
-
-..  code-block:: ini
-
-    [analog]
-    verbs = DELETE, GET, PATCH, POST, PUT
-    status_codes = 1, 2, 3, 4, 5, 404, 500
-    paths =
-        /docs/api
-        /docs
-        /index.html
-        /some/path/group

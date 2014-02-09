@@ -40,6 +40,7 @@ class AnalogArgumentParser(argparse.ArgumentParser):
 
     _arg_separator = re.compile(r',|\s', re.UNICODE)
     _key_separator = re.compile(r'=|\s', re.UNICODE)
+    _list_args = ('-p', '--path', '-v', '--verb', '-s', '--status')
 
     def convert_arg_line_to_args(self, arg_line):
         """Comma/whitespace-split ``arg_line`` and yield separate attributes.
@@ -60,13 +61,18 @@ class AnalogArgumentParser(argparse.ArgumentParser):
             # key with value
             if len(key) > 1:
                 key, arg_line = key
+                key = key.strip()
+                arg_line = arg_line.strip()
             # key only
             else:
                 key = key[0]
                 arg_line = ''
         # split arguments
         if arg_line:
-            args = re.split(r',|\s', arg_line)
+            if key in self._list_args:
+                args = re.split(r',|\s', arg_line)
+            else:
+                args = [arg_line]
             for arg in args:
                 if not arg.strip():
                     continue

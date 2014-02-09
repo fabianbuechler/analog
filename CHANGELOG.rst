@@ -4,6 +4,8 @@ Changelog
 0.2.1 - unreleased
 ------------------
 
+* Fix custom log format definitions. Format selection in CLI via subcommands.
+
 * Add pypy to tox environments.
 
 0.2.0 - 2014-01-30

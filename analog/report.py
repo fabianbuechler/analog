@@ -66,7 +66,6 @@ class Report(object):
         :rtype: :py:class:`analog.report.Report`
 
         """
-
         def status_counter():
             return PrefixMatchingCounter(
                 {str(code): 0 for code in status_codes})
