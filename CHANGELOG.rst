@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.3.1 - unreleased
+0.3.1 - 2014-02-09
 ------------------
 
 * Rename ``--max_age`` option to ``--max-age`` for consistency.
