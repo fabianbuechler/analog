@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.2.1 - unreleased
+0.3.0 - 2014-02-09
 ------------------
 
 * Ignore __init__.py at PEP257 checks since __all__ is not properly supported.
