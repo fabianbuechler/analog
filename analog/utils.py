@@ -24,7 +24,7 @@ class AnalogArgumentParser(argparse.ArgumentParser):
     The argument files contain one argument per line. Arguments can be comma or
     whitespace separated on a line. For example all of this works::
 
-        --format=nginx
+        nginx
         -o       table
         --verb   GET, POST, PUT
         --verb   PATCH

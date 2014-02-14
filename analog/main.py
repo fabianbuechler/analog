@@ -18,6 +18,10 @@ def main(argv=None):
     from ``stdin``. This can be handy for piping in filtered logfiles
     (e.g. with ``grep``).
 
+    Select the logfile format subcommand that suits your needs or define a
+    custom log format using ``analog custom --pattern-regex <...> --time-format
+    <...>``.
+
     To analyze for the logfile for specified paths, provide them via ``--path``
     arguments (mutliple times). Also, monitoring specifig HTTP verbs (request
     methods) via ``--verb`` and specific response status codes via ``--status``
@@ -26,10 +30,6 @@ def main(argv=None):
     Paths and status codes all match the start of the actual log entry values.
     Thus, specifying a path ``/foo`` will group all paths beginning with that
     value.
-
-    Predefined logfile formats can be selected with ``--format``. To specify a
-    custom format, pass a regular expression with named groups for log entry
-    attributes as ``--regex`` argument.
 
     Arguments can be listed in a file by specifying ``@argument_file.txt`` as
     parameter.
@@ -41,7 +41,7 @@ def main(argv=None):
         fromfile_prefix_chars='@')
 
     format_choices = analog.LogFormat.all_formats()
-    output_choices = analog.Renderer.all_renderers().keys()
+    output_choices = sorted(analog.Renderer.all_renderers().keys())
 
     # --version
     parser.add_argument('--version',
@@ -127,7 +127,7 @@ def main(argv=None):
                                help='timestamp format (strftime compatible)')
 
     try:
-        if argv is None:
+        if argv is None:  # pragma: no cover
             argv = sys.argv
         args = parser.parse_args(argv[1:])
 
