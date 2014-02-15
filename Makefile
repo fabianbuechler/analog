@@ -9,7 +9,7 @@ pytest:
 		--omit="analog/tests/*" \
 		-m py.test
 	@echo "✓ ran tests and collected coverage\n"
-	@coverage report
+	@coverage report --show-missing
 	@coverage html --title="analog coverage report"
 	@echo "✓ created coverage reports in docs/_coverage/\n"
 
