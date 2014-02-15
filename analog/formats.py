@@ -118,7 +118,7 @@ NGINX = LogFormat('nginx', r'''
     "(?P<http_user_agent>[^"]+?)"\s         # User-Agent header
     "(?P<http_x_forwarded_for>[^"]+?)"\s    # X-Forwarded-For header
     (?P<request_time>[\d\.]+)\s             # Request time
-    (?P<upstream_response_time>[\d\.]+)\s   # Upstream response time
+    (?P<upstream_response_time>[\d\.]+)\s?  # Upstream response time
     (?P<pipe>\S+)?$                         # Pipelined request
     ''', time_format='%d/%b/%Y:%H:%M:%S +0000')
 """Nginx ``combinded_timed`` format::
