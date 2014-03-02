@@ -4,7 +4,7 @@ Changelog
 0.3.2 - unreleased
 ------------------
 
-
+* Test ``analog.report.Report`` implementation and fix some bugs.
 
 0.3.1 - 2014-02-09
 ------------------

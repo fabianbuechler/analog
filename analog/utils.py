@@ -93,8 +93,25 @@ class PrefixMatchingCounter(Counter):
 
     """
 
-    def inc(self, field):
-        """Increment every field that starts with field by one."""
+    def match(self, field):
+        """Check if ``field`` is matched by any defined ``prefix``.
+
+        :param field: field value to match.
+        :returns: matched field ``prefix`` if matched, else ``None``.
+
+        """
+        field = str(field)
         for prefix in self.keys():
-            if str(field).startswith(str(prefix)):
-                self[prefix] += 1
+            if field.startswith(str(prefix)):
+                return prefix
+        return None
+
+    def inc(self, field):
+        """Increment every field that starts with field by one.
+
+        :param field: field value to increment.
+
+        """
+        prefix = self.match(field)
+        if prefix is not None:
+            self[prefix] += 1

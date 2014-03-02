@@ -11,6 +11,8 @@ try:
 except ImportError:
     from analog.statistics import mean, median
 
+from analog import LOG
+
 
 class ListStats(object):
 
@@ -66,19 +68,22 @@ class Report(object):
         :rtype: :py:class:`analog.report.Report`
 
         """
+        def verb_counter():
+            return Counter({verb: 0 for verb in verbs})
+
         def status_counter():
             return PrefixMatchingCounter(
                 {str(code): 0 for code in status_codes})
 
         self.execution_time = None
         self.requests = 0
-        self._verbs = Counter({verb: 0 for verb in verbs})
+        self._verbs = verb_counter()
         self._status = status_counter()
         self._times = []
         self._upstream_times = []
         self._body_bytes = []
         self._path_requests = Counter()
-        self._path_verbs = defaultdict(Counter)
+        self._path_verbs = defaultdict(verb_counter)
         self._path_status = defaultdict(status_counter)
         self._path_times = defaultdict(list)
         self._path_upstream_times = defaultdict(list)
@@ -86,6 +91,9 @@ class Report(object):
 
     def add(self, path, verb, status, time, upstream_time, body_bytes):
         """Add a log entry to the report.
+
+        Any request with ``verb`` not matching any of ``self._verbs`` or
+        ``status`` not matching any of ``self._status`` is ignored.
 
         :param path: monitored request path.
         :type path: ``str``
@@ -101,9 +109,14 @@ class Report(object):
         :type body_bytes: ``float``
 
         """
+        # Only keep entries with verbs/status codes that are being tracked
+        if verb not in self._verbs or self._status.match(status) is None:
+            LOG.debug("Ignoring log entry for non-tracked verb ({verb}) or "
+                      "status code ({status!s}).".format(verb=verb,
+                                                         status=status))
+            return
         self.requests += 1
-        if verb in self._verbs:  # Only keep verbs that are being tracked
-            self._verbs[verb] += 1
+        self._verbs[verb] += 1
         self._status.inc(str(status))
         self._times.append(time)
         self._upstream_times.append(upstream_time)
