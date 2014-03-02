@@ -50,7 +50,7 @@ def test_custom_logformat_missing_groups():
     time_format = '%d/%b/%Y:%H:%M:%S +0000'
     with pytest.raises(InvalidFormatExpressionError) as exc:
         LogFormat('invalid', pattern_regex, time_format)
-    assert ('analog.exceptions.InvalidFormatExpressionError: '
+    assert ('InvalidFormatExpressionError: '
             'Format pattern must at least define the groups: {0}'.format(
                 ', '.join(LogFormat._required_attributes))) in str(exc)
 
