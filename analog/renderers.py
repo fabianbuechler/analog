@@ -196,8 +196,8 @@ class PlainTextRenderer(Renderer):
 
         """
         return textwrap.dedent("""\
-            {stats.mean:>10.5}   mean
-            {stats.median:>10.5}   median
+            {stats.mean:>10.3f}   mean
+            {stats.median:>10.3f}   median
             """).format(stats=list_stats)
 
     def _str_path_counts(self, path_counts):

@@ -4,7 +4,7 @@ Changelog
 0.3.3 - unreleased
 ------------------
 
-
+* Fix bug in default plaintext renderer.
 
 0.3.2 - 2014-03-02
 ------------------
