@@ -34,11 +34,14 @@ def find_subclasses(cls, _seen=None):
                 yield subclass
 
 
-class Renderer(object):
+def with_metaclass(meta, *bases):
+    """From six: Create a base class with a metaclass."""
+    return meta(meta.__name__, bases, {})
+
+
+class Renderer(with_metaclass(abc.ABCMeta, object)):
 
     """Base report renderer interface."""
-
-    __metaclass__ = abc.ABCMeta
 
     name = None
 
