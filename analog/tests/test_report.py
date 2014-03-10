@@ -193,6 +193,6 @@ def test_report_render():
     assert output == (
         'path,requests,GET,POST,status_20x,status_404,times_mean,times_median,'
         'upstream_times_mean,upstream_times_median,body_bytes_mean,'
-        'body_bytes_median\r\n'
-        '/foo/bar,1,1,0,1,0,0.1,0.1,0.09,0.09,255.0,255\r\n'
-        'total,1,1,0,1,0,0.1,0.1,0.09,0.09,255.0,255\r')
+        'body_bytes_median\n'
+        '/foo/bar,1,1,0,1,0,0.1,0.1,0.09,0.09,255.0,255\n'
+        'total,1,1,0,1,0,0.1,0.1,0.09,0.09,255.0,255')

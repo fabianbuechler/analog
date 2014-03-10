@@ -25,7 +25,7 @@ def find_subclasses(cls, _seen=None):
 
     """
     if _seen is None:
-            _seen = set()
+        _seen = set()
     for subclass in cls.__subclasses__():
         if subclass not in _seen:
             _seen.add(subclass)
@@ -34,12 +34,18 @@ def find_subclasses(cls, _seen=None):
                 yield subclass
 
 
-def with_metaclass(meta, *bases):
-    """From six: Create a base class with a metaclass."""
-    return meta(meta.__name__, bases, {})
+def add_metaclass(metaclass):
+    """From six: Class decorator for creating a class with a metaclass."""
+    def wrapper(cls):
+        orig_vars = cls.__dict__.copy()
+        orig_vars.pop('__dict__', None)
+        orig_vars.pop('__weakref__', None)
+        return metaclass(cls.__name__, cls.__bases__, orig_vars)
+    return wrapper
 
 
-class Renderer(with_metaclass(abc.ABCMeta, object)):
+@add_metaclass(abc.ABCMeta)
+class Renderer(object):
 
     """Base report renderer interface."""
 
@@ -101,9 +107,6 @@ class PlainTextRenderer(Renderer):
         :rtype: `str`
 
         """
-        if report.requests == 0:
-            return "Zero requests analyzed."
-
         output = textwrap.dedent("""\
             Requests: {self.requests}
 
@@ -148,9 +151,6 @@ class PlainTextRenderer(Renderer):
         :rtype: `str`
 
         """
-        if report.requests == 0:
-            return "Zero requests analyzed."
-
         output = []
         for path, verbs, status, times, upstream_times, body_bytes in zip(
                 report.path_verbs.keys(),
@@ -235,11 +235,10 @@ class PlainTextRenderer(Renderer):
         return "\n".join(lines)
 
 
+@add_metaclass(abc.ABCMeta)
 class TabularDataRenderer(Renderer):
 
     """Base renderer for report output in any tabular form."""
-
-    __metaclass__ = abc.ABCMeta
 
     #: field names for ``ListStats`` attributes
     _stats_fields = ('times', 'upstream_times', 'body_bytes')
@@ -321,11 +320,10 @@ class TabularDataRenderer(Renderer):
         return (list(headers), rows)
 
 
+@add_metaclass(abc.ABCMeta)
 class ASCIITableRenderer(TabularDataRenderer):
 
     """Base renderer for report output in ascii-table format."""
-
-    __metaclass__ = abc.ABCMeta
 
     tabulate_format = None
 
@@ -363,11 +361,10 @@ class GridTableRenderer(ASCIITableRenderer):
     tabulate_format = 'grid'
 
 
+@add_metaclass(abc.ABCMeta)
 class SeparatedValuesRenderer(TabularDataRenderer):
 
     """Base renderer for report output in delimiter-separated values format."""
-
-    __metaclass__ = abc.ABCMeta
 
     #: value delimter. E.g. comma or tab.
     delimiter = None
@@ -385,8 +382,12 @@ class SeparatedValuesRenderer(TabularDataRenderer):
         """
         headers, rows = self._tabular_data(report, path_stats)
 
-        stream = StringIO()
-        writer = csv.writer(stream, delimiter=str(self.delimiter))
+        try:
+            stream = StringIO(newline='')
+        except TypeError:
+            stream = StringIO()  # Python 2.7 does not support newline arg
+        writer = csv.writer(stream, delimiter=str(self.delimiter),
+                            lineterminator='\n')
         writer.writerow(headers)
         writer.writerows(rows)
 
