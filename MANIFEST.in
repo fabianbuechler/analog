@@ -1,0 +1,16 @@
+include *.py
+include AUTHORS
+include CHANGELOG.rst
+include LICENSE
+include Makefile
+include README.rst
+include requirements.txt
+
+recursive-include analog *
+recursive-include docs *.rst
+
+global-exclude __pycache__/*
+global-exclude *.pyd
+global-exclude *.pyc
+global-exclude .hg*
+global-exclude .DS_Store
