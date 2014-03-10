@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.3.3 - unreleased
+0.3.3 - 2014-03-10
 ------------------
 
 * Test ``analog.renderers`` implementation.
