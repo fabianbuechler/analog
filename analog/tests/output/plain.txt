@@ -1,0 +1,75 @@
+Requests: 9
+
+HTTP Verbs:
+             5   POST
+             3   GET
+             1   PATCH
+
+Status Codes:
+             6   2
+             3   4
+             0   5
+
+Path Requests:
+             6   /foo/bar/1
+             3   /foo/bar
+
+Times [s]:
+         0.140   mean
+         0.100   median
+
+Upstream Times [s]:
+         0.136   mean
+         0.100   median
+
+Body Bytes Sent [B]:
+       176.667   mean
+       212.000   median
+
+/foo/bar
+
+    HTTP Verbs:
+                 2   POST
+                 1   GET
+                 0   PATCH
+
+    Status Codes:
+                 2   2
+                 1   4
+                 0   5
+
+    Times [s]:
+             0.187   mean
+             0.210   median
+
+    Upstream Times [s]:
+             0.180   mean
+             0.200   median
+
+    Body Bytes Sent [B]:
+           212.333   mean
+           212.000   median
+
+/foo/bar/1
+
+    HTTP Verbs:
+                 3   POST
+                 2   GET
+                 1   PATCH
+
+    Status Codes:
+                 4   2
+                 2   4
+                 0   5
+
+    Times [s]:
+             0.117   mean
+             0.100   median
+
+    Upstream Times [s]:
+             0.113   mean
+             0.100   median
+
+    Body Bytes Sent [B]:
+           158.833   mean
+           189.000   median
