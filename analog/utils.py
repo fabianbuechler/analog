@@ -81,7 +81,7 @@ class AnalogArgumentParser(argparse.ArgumentParser):
                     yield key
                 yield arg
         # key only
-        elif key:
+        else:
             yield key
 
 
