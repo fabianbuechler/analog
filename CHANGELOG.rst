@@ -1,6 +1,13 @@
 Changelog
 =========
 
+0.3.4 - 2014-04-01
+------------------
+
+* Test ``analog.analyzer`` implementation.
+
+* Test ``analog.utils`` implementation.
+
 0.3.3 - 2014-03-10
 ------------------
 

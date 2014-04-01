@@ -2,6 +2,10 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 import os
+try:
+    from unittest import mock
+except ImportError:
+    import mock
 
 import pytest
 
@@ -80,3 +84,32 @@ class TestRenderers():
                 path_stats=True, output_format=output_format)
             expected = self.read(output_format)
             assert output == expected
+
+    def test_svrenderer_py27_stringio(self):
+        """Handle that StringIO does not accept newline arg on Python 2.7."""
+        csvrenderer = renderers.CSVRenderer()
+        csvrenderer.render
+
+        # StringIO has newline argument in Python3.3
+        with mock.patch('analog.renderers.StringIO') as mock_stringio:
+            csvrenderer.render(report=self.report, path_stats=False)
+            mock_stringio.assert_called_once_with(newline='')
+
+        # but not in Python2.7
+        try:
+            with mock.patch('analog.renderers.StringIO',
+                            side_effect=[TypeError, mock.DEFAULT]
+                            ) as mock_stringio:
+                csvrenderer.render(report=self.report, path_stats=False)
+                assert mock_stringio.call_args_list == [mock.call(newline=''),
+                                                        mock.call()]
+
+        # NOTE: returning mock.DEFAULT does not return the default MagicMock
+        #       on Python2.7 when using the non-stdlib mock package.
+        #       See: https://code.google.com/p/mock/issues/detail?id=190
+        except (TypeError, AttributeError) as exc:
+            # on Python2.7 it's a TypeError, on PyPy it's an AttributeError
+            if not (exc.message == 'argument 1 must have a "write" method' or
+                    exc.message == "'_SentinelObject' object has no "
+                                   "attribute 'write'"):
+                raise

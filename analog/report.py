@@ -2,6 +2,7 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 from collections import Counter, defaultdict, OrderedDict
+import time
 
 from analog.renderers import Renderer
 from analog.utils import PrefixMatchingCounter
@@ -75,6 +76,7 @@ class Report(object):
             return PrefixMatchingCounter(
                 {str(code): 0 for code in status_codes})
 
+        self._start_time = time.clock()
         self.execution_time = None
         self.requests = 0
         self._verbs = verb_counter()
@@ -88,6 +90,11 @@ class Report(object):
         self._path_times = defaultdict(list)
         self._path_upstream_times = defaultdict(list)
         self._path_body_bytes = defaultdict(list)
+
+    def finish(self):
+        """Stop execution timer."""
+        end_time = time.clock()
+        self.execution_time = end_time - self._start_time
 
     def add(self, path, verb, status, time, upstream_time, body_bytes):
         """Add a log entry to the report.

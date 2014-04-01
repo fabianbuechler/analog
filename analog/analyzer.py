@@ -2,7 +2,6 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 import datetime
-import time
 
 from analog.exceptions import MissingFormatError
 from analog.formats import LogFormat
@@ -121,9 +120,6 @@ class Analyzer:
             self._min_time = (
                 self._now - datetime.timedelta(minutes=self._max_age))
 
-        # start timestamp
-        started = time.clock()
-
         report = Report(self._verbs, self._status_codes)
 
         # read lines from logfile for the last max_age minutes
@@ -158,9 +154,7 @@ class Analyzer:
                 body_bytes=int(log_entry.body_bytes_sent))
 
         # end timestamp
-        finished = time.clock()
-        report.execution_time = finished - started
-
+        report.finish()
         return report
 
 
@@ -210,9 +204,8 @@ def analyze(log, format, pattern=None, time_format=None,
     report = analyzer()
 
     # print timing information
-    if timing:
-        print("Analyzed logs in {elapsed:.3f}s.\n".format(
-            elapsed=report.execution_time))
+    if timing and report.execution_time:
+        print("Analyzed logs in {:.3f}s.\n".format(report.execution_time))
 
     # print report in requested output format
     print(report.render(path_stats=path_stats, output_format=output_format))
