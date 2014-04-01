@@ -4,6 +4,8 @@ Changelog
 0.3.4 - unreleased
 ------------------
 
+* Test ``analog.analyzer`` implementation.
+
 * Test ``analog.utils`` implementation.
 
 0.3.3 - 2014-03-10
