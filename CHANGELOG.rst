@@ -1,10 +1,10 @@
 Changelog
 =========
 
-0.3.5 - unreleased
-------------------
+1.0.0b1 - 2014-03-06
+--------------------
 
-
+* Going beta with Python 3.4 support and good test coverage.
 
 0.3.4 - 2014-04-01
 ------------------
