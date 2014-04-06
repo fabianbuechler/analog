@@ -4,7 +4,7 @@ from __future__ import (absolute_import, division, print_function,
 import logging
 
 
-__version__ = '1.0.0b1'
+__version__ = '1.0.0.dev'
 
 
 # analog logger
