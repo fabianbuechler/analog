@@ -37,7 +37,6 @@ release:
 	@echo "\n\n### releasing to pypi###\n"
 	@python setup.py sdist bdist_wheel upload
 	@rm -r build
-	@rm -r dist
 	@echo "✓ release uploaded.\n"
 
 .PHONY: all pytest flake8 pep257 docs release

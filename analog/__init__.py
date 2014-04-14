@@ -2,9 +2,10 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 import logging
+from pkg_resources import get_distribution
 
 
-__version__ = '1.0.0.dev'
+__version__ = get_distribution('analog').version
 
 
 # analog logger

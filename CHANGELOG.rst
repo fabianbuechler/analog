@@ -4,6 +4,8 @@ Changelog
 1.0.0 - unreleased
 ------------------
 
+* Set version only in setup.py, use via pkg_resources.get_distribution.
+
 1.0.0b1 - 2014-03-06
 --------------------
 
