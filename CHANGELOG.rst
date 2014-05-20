@@ -6,7 +6,7 @@ Changelog
 
 * Set version only in setup.py, use via pkg_resources.get_distribution.
 
-1.0.0b1 - 2014-03-06
+1.0.0b1 - 2014-04-06
 --------------------
 
 * Going beta with Python 3.4 support and good test coverage.
