@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.0.0 - unreleased
+1.0.0 - 2015-02-26
 ------------------
 
 * Provide yaml config file for Travis-CI.
