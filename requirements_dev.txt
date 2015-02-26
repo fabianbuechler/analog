@@ -1,0 +1,6 @@
+ipython
+ipdb
+Sphinx
+sphinx_rtd_theme
+tox
+wheel
