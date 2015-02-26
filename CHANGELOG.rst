@@ -4,6 +4,8 @@ Changelog
 1.0.0 - unreleased
 ------------------
 
+* Provide yaml config file for Travis-CI.
+
 * Extend tox environments to cover 2.7, 3.2, 3.3, 3.4, pypy and pypy3.
 
 * Convert repository to git and move to github.
