@@ -2,6 +2,9 @@
 Analog - Log Analysis Utility
 =============================
 
+..  image:: https://travis-ci.org/fabianbuechler/analog.svg?branch=master
+    :target: https://travis-ci.org/fabianbuechler/analog
+
 Analog is a weblog analysis utility that provides these metrics:
 
 * Number for requests.
