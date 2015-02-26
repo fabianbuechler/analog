@@ -109,7 +109,10 @@ class TestRenderers():
         #       See: https://code.google.com/p/mock/issues/detail?id=190
         except (TypeError, AttributeError) as exc:
             # on Python2.7 it's a TypeError, on PyPy it's an AttributeError
-            if not (exc.message == 'argument 1 must have a "write" method' or
-                    exc.message == "'_SentinelObject' object has no "
-                                   "attribute 'write'"):
+            message = getattr(exc, 'message', getattr(exc, 'args', None))
+            if isinstance(message, (list, tuple)):
+                message = message[0]
+            if message is None or message not in (
+                    'argument 1 must have a "write" method',
+                    "'_SentinelObject' object has no attribute 'write'"):
                 raise

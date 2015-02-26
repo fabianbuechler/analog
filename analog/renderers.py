@@ -288,8 +288,8 @@ class TabularDataRenderer(Renderer):
         status_headers = tuple("status_{code:x<3}".format(code=code)
                                for code in status_names)
 
-        headers = (("path", "requests") + verb_names + status_headers
-                   + stats_names)
+        headers = (("path", "requests") + verb_names + status_headers +
+                   stats_names)
         total = (("total", report.requests) +
                  verb_counts + status_counts + stats_values)
 

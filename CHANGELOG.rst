@@ -4,6 +4,8 @@ Changelog
 1.0.0 - unreleased
 ------------------
 
+* Extend tox environments to cover 2.7, 3.2, 3.3, 3.4, pypy and pypy3.
+
 * Convert repository to git and move to github.
 
 * Set version only in setup.py, use via pkg_resources.get_distribution.

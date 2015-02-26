@@ -32,7 +32,7 @@ classifiers = [
     'Topic :: Utilities',
     'Programming Language :: Python :: Implementation :: PyPy'] + [
     'Programming Language :: Python :: {0}'.format(pyv)
-    for pyv in '2.7 3.3 3.4'.split()
+    for pyv in '2.7 3.2 3.3 3.4'.split()
 ]
 
 
