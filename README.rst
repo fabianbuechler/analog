@@ -18,7 +18,7 @@ Analog is a weblog analysis utility that provides these metrics:
 * Per path response body size in bytes statistics (mean, median).
 
 Documentation is on `analog.readthedocs.org <http://analog.readthedocs.org/>`_,
-code and issues are on `bitbucket.org/fabianbuechler/analog
-<https://bitbucket.org/fabianbuechler/analog>`_ and the package can be installed
+code and issues are on `github.com/fabianbuechler/analog
+<https://github.com/fabianbuechler/analog>`_ and the package can be installed
 from PyPI at `pypi.python.org/pypi/analog
 <https://pypi.python.org/pypi/analog>`_.

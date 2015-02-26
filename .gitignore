@@ -1,0 +1,15 @@
+.cache
+dist
+build
+*.egg-info
+*.pyc
+*.pyo
+.coverage
+.tox
+MANIFEST
+try
+
+docs/_build/**
+!docs/_build/.keep
+docs/_coverage/**
+!docs/_coverage/.keep

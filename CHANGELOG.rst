@@ -4,6 +4,8 @@ Changelog
 1.0.0 - unreleased
 ------------------
 
+* Convert repository to git and move to github.
+
 * Set version only in setup.py, use via pkg_resources.get_distribution.
 
 1.0.0b1 - 2014-04-06
